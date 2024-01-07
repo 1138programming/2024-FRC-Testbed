@@ -1,3 +1,6 @@
+
+
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -6,98 +9,22 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.CommandGroups.Auton.ScoreHighAndLeave;
-import frc.robot.CommandGroups.Auton.ScoreHighDontMove;
-import frc.robot.CommandGroups.IntakeThenLift.LiftHighSetpoint;
-import frc.robot.CommandGroups.IntakeThenLift.LiftLowSetpoint;
-import frc.robot.CommandGroups.IntakeThenLift.LiftMidSetpoint;
-import frc.robot.CommandGroups.BackThenForward;
-import frc.robot.CommandGroups.ScoreLowDontMove;
-import frc.robot.commands.Base.AutoBalance;
-import frc.robot.commands.Base.DriveWithJoysticks;
-import frc.robot.commands.Intake.IntakeBottomNoCollect;
-import frc.robot.commands.Intake.IntakeMoveSwivelDown;
-import frc.robot.commands.Intake.IntakeMoveSwivelUp;
-import frc.robot.commands.Intake.IntakeShootOut;
-import frc.robot.commands.Intake.IntakeSpin;
-import frc.robot.commands.Intake.IntakeSpinAndSwivel;
-import frc.robot.commands.Intake.IntakeSpinReverse;
-import frc.robot.commands.Intake.IntakeStop;
-import frc.robot.commands.Intake.SetConeMode;
-import frc.robot.commands.Intake.SetCubeMode;
 
+
+//base 
+import frc.robot.commands.Base.DriveWithJoysticks;
+
+import frc.robot.commands.Base.ToggleSpeed;
+import frc.robot.commands.Base.Resets.ResetEncodersTeleop;
 import frc.robot.subsystems.Base;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lift;
-import frc.robot.subsystems.Endgame;
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Orientation;
-import frc.robot.subsystems.Limelight;
-//Commands for the Base
-import frc.robot.commands.Base.ToggleSpeed;
-import frc.robot.commands.Base.ResetEncoders;
-import frc.robot.commands.Base.ResetGyro;
-import frc.robot.commands.Base.ToggleDefenseMode;
-import frc.robot.commands.Base.SetDefenseModeFalse;
-import frc.robot.commands.Base.SetDefenseModeTrue;
-import frc.robot.commands.Base.DriveWithJoysticks;
-//Commands for the Intake
-import frc.robot.commands.Intake.IntakeSpin;
-import frc.robot.commands.Intake.IntakeStop;
-import frc.robot.commands.Intake.IntakeSwivelBottom;
-import frc.robot.commands.Intake.IntakeSwivelShoot;
-import frc.robot.commands.Intake.IntakeSwivelTop;
-import frc.robot.commands.Intake.OuttakeAndSwivel;
-//Commands for the Orientation
-import frc.robot.commands.Orientation.OrientationSpinOut;
-import frc.robot.commands.Orientation.OrientationSpinIn;
-import frc.robot.commands.Orientation.OrientationStop;
-import frc.robot.commands.Orientation.CheckDoorAndCollectObject;
-import frc.robot.commands.Orientation.ExtendAndIntake;
-import frc.robot.commands.Orientation.ExtendAndOuttake;
-import frc.robot.commands.Scoring.Claw.CloseClaw;
-import frc.robot.commands.Scoring.Claw.OpenClaw;
-import frc.robot.commands.Scoring.Claw.RotateWrist;
-import frc.robot.commands.Scoring.Claw.RotateWristCube;
-import frc.robot.commands.Scoring.Claw.RotateWristOut;
-import frc.robot.commands.Scoring.Claw.RotateWristToReady;
-import frc.robot.commands.Scoring.Lift.FlipperIn;
-import frc.robot.commands.Scoring.Lift.FlipperOut;
-import frc.robot.commands.Scoring.Lift.InnerLiftIn;
-import frc.robot.commands.Scoring.Lift.InnerLiftOut;
-import frc.robot.commands.Scoring.Lift.LiftStop;
-import frc.robot.commands.Scoring.Lift.MoveFlipper;
-import frc.robot.commands.Scoring.Lift.MoveInnerLift;
-import frc.robot.commands.Scoring.Lift.MoveLift;
-import frc.robot.commands.Scoring.Lift.MoveLiftToHighPos;
-import frc.robot.commands.Scoring.Lift.MoveLiftToLowPos;
-import frc.robot.commands.Scoring.Lift.MoveLiftToMidPos;
-import frc.robot.commands.Scoring.Lift.MoveLiftToReadyPos;
-import frc.robot.commands.Orientation.ExtensionNudge;
-import frc.robot.commands.Orientation.OrientationMoveOnlyExtensionForward;
-import frc.robot.commands.Orientation.OrientationMoveOnlyExtensionReverse;
 
-import frc.robot.commands.Limelight.LimelightMoveToAprilTag;
-import frc.robot.commands.Limelight.LimelightMoveToConeNode;
-import frc.robot.commands.Limelight.ToggleLimelightPipeline;
-
-import frc.robot.CommandGroups.BackThenForward;
-
-// import frc.robot.commands.Endgame.*;
-
-
-import frc.robot.commands.Base.ToggleSpeed;
-import frc.robot.commands.Endgame.DeployEndgame;
-import frc.robot.commands.Endgame.EndgameReadyUp;
-import frc.robot.commands.Endgame.EndgameToCenter;
-import frc.robot.commands.Endgame.MoveEndgameShuffleboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 /**
@@ -109,91 +36,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   //Subsystems
   private final Base base = new Base();
-  private final Lift lift = new Lift();
-  private final Claw claw = new Claw();
-  private final Endgame endgame = new Endgame();
-  private final Intake intake = new Intake();
-  private final Orientation orientation = new Orientation();
-  private final Limelight limelight = new Limelight();
 
+  
+  
   // Base
   private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
-  private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent);
-  private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent);
-  private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent);
-  private final ResetGyro resetGyro = new ResetGyro(base);
-  private final ResetEncoders resetEncoders = new ResetEncoders(base);
-  private final ToggleDefenseMode toggleDefenseMode = new ToggleDefenseMode(base);
-  private final SetDefenseModeTrue setDefenseModeTrue = new SetDefenseModeTrue(base);
-  private final SetDefenseModeFalse setDefenseModeFalse = new SetDefenseModeFalse(base);
-
-  // Intake  
-  private final IntakeSpin intakeSpinForward = new IntakeSpin(intake);
-  private final IntakeSpinReverse intakeSpinReverse = new IntakeSpinReverse(intake);
-  private final IntakeShootOut intakeShootOut = new IntakeShootOut(intake);
-
-  private final IntakeMoveSwivelDown moveSwivelDown = new IntakeMoveSwivelDown(intake);
-  private final IntakeMoveSwivelUp moveSwivelUp = new IntakeMoveSwivelUp(intake);
-
-  private final IntakeSwivelTop intakeSwivelTop = new IntakeSwivelTop(intake);
-  private final IntakeSwivelBottom intakeSwivelBottom = new IntakeSwivelBottom(intake);
-  private final IntakeSwivelShoot intakeSwivelShoot = new IntakeSwivelShoot(intake);
-  private final IntakeBottomNoCollect intakeBottomNoCollect = new IntakeBottomNoCollect(intake);
-
-  private final IntakeSpinAndSwivel intakeSpinAndSwivel = new IntakeSpinAndSwivel(intake);
-  private final OuttakeAndSwivel outtakeAndSwivel = new OuttakeAndSwivel(intake);
-
-  private final IntakeStop intakeStop = new IntakeStop(intake);
-  private final SetConeMode setConeMode = new SetConeMode(orientation, intake, claw, limelight);
-  private final SetCubeMode setCubeMode = new SetCubeMode(orientation, intake, claw, limelight);
+  private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
+  private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
+  private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
   
-
-  //Orientation
-  private final ExtendAndOuttake extendOut = new ExtendAndOuttake(orientation);
-  private final ExtendAndIntake storeObject = new ExtendAndIntake(orientation);
-  private final ExtensionNudge nudge = new ExtensionNudge(orientation);
-  private final OrientationSpinIn orientationSpinIn = new OrientationSpinIn(orientation);
-  private final OrientationSpinOut orientationSpinOut = new OrientationSpinOut(orientation);
-  private final CheckDoorAndCollectObject checkDoorAndCollectObject = new CheckDoorAndCollectObject(orientation);
-  private final OrientationStop orientationStop = new OrientationStop(orientation);
-
-  // Endgame
-  private final MoveEndgameShuffleboard moveEndgameShuffleboard = new MoveEndgameShuffleboard(endgame);
-  private final DeployEndgame deployEndgame = new DeployEndgame(endgame);
-  private final EndgameReadyUp endgameReadyUp = new EndgameReadyUp(endgame);
-  private final EndgameToCenter endgameToCenter = new EndgameToCenter(endgame);
-
-  // Scoring
-  private final LiftStop liftstop = new LiftStop(lift);
-  private final RotateWrist rotateWrist = new RotateWrist(claw);
-  private final RotateWristCube rotateWristCube = new RotateWristCube(claw);
-  private final FlipperOut flipperOut = new FlipperOut(lift);
-  private final FlipperIn flipperIn = new FlipperIn(lift);
-  private final MoveFlipper moveFlipperForward = new MoveFlipper(lift, 0.1);
-  private final MoveFlipper moveFlipperReverse = new MoveFlipper(lift, -0.1);
-  private final RotateWristToReady rotateWristToReady = new RotateWristToReady(claw);
-  private final CloseClaw closeClaw = new CloseClaw(claw);
-  private final OpenClaw openClaw = new OpenClaw(claw);
-  private final MoveLift moveLiftUp = new MoveLift(lift, 0.1);
-  private final MoveLift moveLiftDown = new MoveLift(lift, -0.1);
-  // private final MoveLift moveLiftUp = new MoveLift(lift, 0.4);
-  // private final MoveLift moveLiftDown = new MoveLift(lift, -0.4);
-  private final MoveInnerLift moveInnerLiftUp = new MoveInnerLift(lift, 0.2);
-  private final MoveInnerLift moveInnerLiftDown = new MoveInnerLift(lift, -0.2);
-  private final MoveLiftToHighPos moveLiftToHighPos = new MoveLiftToHighPos(lift);
-  private final MoveLiftToMidPos moveLiftToMidPos = new MoveLiftToMidPos(lift);
-  private final MoveLiftToLowPos moveLiftToLowPos = new MoveLiftToLowPos(lift);
-  private final MoveLiftToReadyPos moveLiftToReadyPos = new MoveLiftToReadyPos(lift);
-  // Limelight
-  private final LimelightMoveToAprilTag goToTarget = new LimelightMoveToAprilTag(base, limelight);
-  private final LimelightMoveToConeNode goToTargetTape = new LimelightMoveToConeNode(base, limelight);
-
-  private final LiftHighSetpoint liftHighSetpoint = new LiftHighSetpoint(lift, claw);
-  private final LiftMidSetpoint liftMidSetpoint = new LiftMidSetpoint(lift, claw);
-  private final LiftLowSetpoint liftLowSetpoint = new LiftLowSetpoint(lift, claw);
-
-
-
 
 
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
@@ -202,7 +53,6 @@ public class RobotContainer {
   private static final int KStreamDeckPort = 2;
   private static final int KTestingStreamDeckPort = 3;
   private static final int KTuningStreamDeckPort = 4;
-
 
   //Deadzone
   private static final double KDeadZone = 0.05;
@@ -253,6 +103,14 @@ public class RobotContainer {
 
   //Game Controllers
   public static Joystick logitech;
+
+
+
+
+
+
+
+
   public static Joystick compStreamDeck;
   public static Joystick testStreamDeck;
   public static Joystick tuningStreamDeck;
@@ -263,24 +121,19 @@ public class RobotContainer {
   public JoystickButton xboxBtnA, xboxBtnB, xboxBtnX, xboxBtnY, xboxBtnLB, xboxBtnRB, xboxBtnStrt, xboxBtnSelect;
 
   public Trigger xboxBtnRT, xboxBtnLT;
-
-  public JoystickButton coneModeButton, cubeModeButton, liftLowSetpointButton, liftMidSetpointButton, liftHighSetpointButton, closeClawButton, // Vjoy 1
-    openClawButton, moveLiftUpButton, moveLiftDownButton, liftToWaitingPosButton, intakeUpButton, intakeDownButton, liftResetButton, defenseModeButton;
   
   public JoystickButton comp1, comp2, comp3, comp4, comp5, comp6, comp7, comp8, comp9, comp10, comp11, comp12, comp13, comp14;
 
   // Top Left SD = 1, numbered from left to right
   public JoystickButton streamDeck1, streamDeck2, streamDeck3, streamDeck4, streamDeck5, streamDeck6, streamDeck7, streamDeck8, streamDeck9, // Vjoy 2
-    streamDeck10, streamDeck11, 
-    streamDeck12, streamDeck13, streamDeck14, streamDeck15;
+    streamDeck10, streamDeck11, streamDeck12, streamDeck13, streamDeck14, streamDeck15; 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    SmartDashboard.putNumber("Auton Number", 1);
+
     base.setDefaultCommand(driveWithJoysticks);
-    // base.setDefaultCommand(new BaseStop(base));
-    intake.setDefaultCommand(intakeStop);
-    orientation.setDefaultCommand(orientationStop);
-    lift.setDefaultCommand(liftstop);
+   
 
     //Game controllers
     logitech = new Joystick(KLogitechPort); //Logitech Dual Action
@@ -310,23 +163,6 @@ public class RobotContainer {
 		xboxBtnStrt = new JoystickButton(xbox, KXboxStartButton);
     xboxBtnLT = new Trigger(() -> (joystickThreshold(xbox.getRawAxis(KXboxLeftTrigger))));
     xboxBtnRT = new Trigger(() -> (joystickThreshold(xbox.getRawAxis(KXboxRightTrigger))));
-
-    coneModeButton = new JoystickButton(compStreamDeck, KConeModeButton);
-    cubeModeButton = new JoystickButton(compStreamDeck, KCubeModeButton);
-    liftLowSetpointButton = new JoystickButton(compStreamDeck, KLiftLowSetpoint);
-    liftMidSetpointButton = new JoystickButton(compStreamDeck, KLiftMidSetpoint);
-    liftHighSetpointButton = new JoystickButton(compStreamDeck, KLiftHighSetpoint);
-    closeClawButton = new JoystickButton(compStreamDeck, KCloseClawButton);
-    openClawButton = new JoystickButton(compStreamDeck, KOpenClawButton);
-    moveLiftUpButton = new JoystickButton(compStreamDeck, KMoveLiftUp);
-    moveLiftDownButton = new JoystickButton(compStreamDeck, KMoveLiftDown);
-    liftToWaitingPosButton = new JoystickButton(compStreamDeck, KLiftToWaitingPos);
-    intakeDownButton = new JoystickButton(compStreamDeck, KIntakeDown);
-    intakeUpButton = new JoystickButton(compStreamDeck, KIntakeUp);
-    
-    liftResetButton = new JoystickButton(compStreamDeck, 14);
-    
-    defenseModeButton = new JoystickButton(compStreamDeck, KDefenseModeButton);
 
     comp1 = new JoystickButton(compStreamDeck, 1);
     comp2 = new JoystickButton(compStreamDeck, 2);
@@ -371,58 +207,23 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     logitechBtnLB.onTrue(toggleMaxSpeed);
-    logitechBtnLB.onFalse(toggleMidSpeed);
+    logitechBtnRB.onTrue(toggleLowSpeed);
 
-    // logitechBtnRB.onTrue(setDefenseModeTrue);
-    // logitechBtnRB.onFalse(setDefenseModeFalse);
-    // logitechBtnRB.onTrue(toggleLowSpeed);
-    // logitechBtnLB.or(logitechBtnRB).onFalse(toggleMidSpeed);
+    // if LB and RB are held and one is released, go back to previous speed
+    if (!logitechBtnLB.getAsBoolean()) { 
+      logitechBtnRB.onFalse(toggleMidSpeed);
+    } else {
+      logitechBtnRB.onFalse(toggleMaxSpeed);
+    }
 
-    logitechBtnY.onTrue(resetEncoders);
+    // if LB and RB are held and one is released, go back to previous speed
+    if (!logitechBtnRB.getAsBoolean()) {
+      logitechBtnLB.onFalse(toggleMidSpeed);
+    } else {
+      logitechBtnLB.onFalse(toggleLowSpeed);
+    }
 
-    // liftHighSetpointButton.whileTrue(new MoveLiftToHighPos(lift));
-    // liftMidSetpointButton.whileTrue(new MoveLiftToMidPos(lift));
-    // liftLowSetpointButton.whileTrue(new MoveLiftToLowPos(lift));
-    // liftResetButton.whileTrue(new MoveLiftToReadyPos(lift));
-
-    // moveLiftUpButton.whileTrue(new MoveLift(lift, 0.3));
-    // moveLiftDownButton.whileTrue(new MoveLift(lift, -0.3));
-
-    comp1.onTrue(intakeSwivelShoot);
-    comp2.whileTrue(intakeShootOut);
-
-    // comp3.onTrue(liftLowSetpoint);
-    // comp4.onTrue(liftMidSetpoint);
-    // comp5.onTrue(liftHighSetpoint);
-    comp6.onTrue(closeClaw);
-    comp7.onTrue(openClaw);
-
-    comp8.whileTrue(moveLiftUp);
-    comp9.whileTrue(moveLiftDown);
-    comp10.onTrue(intakeBottomNoCollect);
-    comp11.whileTrue(intakeSwivelBottom);
-    comp11.onFalse(intakeSwivelTop);
-
-    comp12.whileTrue(moveSwivelUp);
-
-    comp13.onTrue(moveLiftToReadyPos);
-
-    // comp14.onTrue(toggleDefenseMode);
-
-    streamDeck1.whileTrue(moveSwivelUp);
-    streamDeck2.whileTrue(moveSwivelDown);
-    streamDeck3.whileTrue(intakeSpinForward);
-    streamDeck4.whileTrue(moveLiftUp);
-    streamDeck5.whileTrue(moveLiftDown);
-    streamDeck6.whileTrue(moveInnerLiftUp);
-    streamDeck7.whileTrue(intakeShootOut);
-    streamDeck8.whileTrue(moveFlipperForward);
-    streamDeck9.whileTrue(moveFlipperReverse);
-    streamDeck10.whileTrue(rotateWrist);
-    streamDeck11.whileTrue(rotateWristCube);
-    streamDeck12.onTrue(extendOut);
-    streamDeck13.onTrue(storeObject);
-    streamDeck14.whileTrue(intakeSpinReverse);
+    
   }
 
   /**
@@ -431,13 +232,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */ 
   public Command getAutonomousCommand()
-   {
-    // return null;
-    return new BackThenForward(base);
-    // return new ScoreLowDontMove(base);
-    // return new ScoreHighDontMove(lift, claw, base, intake);
-    // return new ScoreHighAndLeave(lift, claw, base, intake);
-    // return new AutoBalance(base);
+  {
+    return null;
   }
 
   public static double scaleBetween(double unscaledNum, double minAllowed, double maxAllowed, double min, double max) {
@@ -452,6 +248,7 @@ public class RobotContainer {
     else
       return 0;
   }
+  
 
   public double getLogiLeftYAxis() {
     final double Y = logitech.getY();
@@ -528,3 +325,4 @@ public boolean joystickThreshold(double triggerValue) {
       return true;
   }
 }
+

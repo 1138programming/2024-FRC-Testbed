@@ -7,7 +7,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,10 +22,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Base extends SubsystemBase {
-  private SlewRateLimiter accelerationLimiter;
-  private double currentDriveSpeed = 0;
-
-
   private SwerveModule frontLeftModule;
   private SwerveModule frontRightModule;
   private SwerveModule backLeftModule;
@@ -35,46 +30,45 @@ public class Base extends SubsystemBase {
   private AHRS gyro;
 
   private SwerveDriveKinematics kinematics;
- 
   private SwerveDriveOdometry odometry;
   private Pose2d pose;
+  
+  private double driveSpeedFactor;
+  private double rotSpeedFactor;
+  
+  private double xyP = 0;
+  private double rotP = 0;
 
   private boolean defenseMode = false;
   
-  private double driveSpeedFactor;
-
-  private SlewRateLimiter xRateLimiter;
-  private SlewRateLimiter yRateLimiter;
-  private SlewRateLimiter rotRateLimiter;
-  
   public Base() {
     frontLeftModule = new SwerveModule(
-      KFrontLeftAngleID,
-      KFrontLeftDriveID,
+      KFrontLeftAngleMotorID,
+      KFrontLeftDriveMotorID,
       KFrontLeftMagEncoderID,
       KFrontLeftOffset,
       KFrontLeftDriveReversed,
       KFrontLeftAngleReversed
     );
     frontRightModule = new SwerveModule(
-      KFrontRightAngleID,
-      KFrontRightDriveID,
+      KFrontRightAngleMotorID,
+      KFrontRightDriveMotorID,
       KFrontRightMagEncoderID, 
       KFrontRightOffset,
       KFrontRightDriveReversed,
       KFrontRightAngleReversed
     );
     backLeftModule = new SwerveModule(
-      KBackLeftAngleID,
-      KBackLeftDriveID,
+      KBackLeftAngleMotorID,
+      KBackLeftDriveMotorID,
       KBackLeftMagEncoderID, 
       KBackLeftOffset,
       KBackLeftDriveReversed,
       KBackLeftAngleReversed
     );
     backRightModule = new SwerveModule(
-      KBackRightAngleID,
-      KBackRightDriveID,
+      KBackRightAngleMotorID,
+      KBackRightDriveMotorID,
       KBackRightMagEncoderID, 
       KBackRightOffset,
       KBackRightDriveReversed,
@@ -89,27 +83,18 @@ public class Base extends SubsystemBase {
       KBackLeftLocation, KBackRightLocation
     );
     odometry = new SwerveDriveOdometry(kinematics, getHeading(), getPositions());
+    
     driveSpeedFactor = KBaseDriveMidPercent;
+    rotSpeedFactor = KBaseRotMidPercent;
 
-    int limiter = 10;
-
-    accelerationLimiter = new SlewRateLimiter(0.5);
-
-    // xRateLimiter = new SlewRateLimiter(limiter);
-    // yRateLimiter = new SlewRateLimiter(limiter);
-    // rotRateLimiter = new SlewRateLimiter(limiter);
+    SmartDashboard.putNumber("X and Y PID", 0);
+    SmartDashboard.putNumber("rot P", 0);
   }
-
-  // public double driv
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, double maxDriveSpeedMPS) {
     xSpeed *= maxDriveSpeedMPS;
     ySpeed *= maxDriveSpeedMPS;
-    rot *= KMaxAngularSpeed;
-
-    // xSpeed = xRateLimiter.calculate(xSpeed);
-    // ySpeed = yRateLimiter.calculate(ySpeed);
-    // rot = rotRateLimiter.calculate(rot);
+    rot *= KMaxAngularSpeed * getRotSpeedFactor();
     
     //feeding parameter speeds into toSwerveModuleStates to get an array of SwerveModuleState objects
     SwerveModuleState[] states =
@@ -119,10 +104,8 @@ public class Base extends SubsystemBase {
           : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, KPhysicalMaxDriveSpeedMPS);
 
-    
-    if (defenseMode && xSpeed == 0 && ySpeed == 0 && rot == 0) {
-      // lockWheels();
-      SmartDashboard.putBoolean("HELLO", true);
+    if (defenseMode) {
+      lockWheels();
     }
     else {
       //setting module states, aka moving the motors
@@ -131,14 +114,13 @@ public class Base extends SubsystemBase {
       backLeftModule.setDesiredState(states[2]);
       backRightModule.setDesiredState(states[3]);
     }
-    SmartDashboard.putBoolean("HELLO", false);
   }
 
   public void lockWheels() {
-    // frontLeftModule.lockWheel(); 
-    // frontRightModule.lockWheel();
-    // backLeftModule.lockWheel();
-    // backRightModule.lockWheel();
+    frontLeftModule.lockWheel(); 
+    frontRightModule.lockWheel();
+    backLeftModule.lockWheel();
+    backRightModule.lockWheel();
   }
   
   public void resetOdometry(Pose2d pose) {
@@ -160,11 +142,11 @@ public class Base extends SubsystemBase {
              traj,
              this::getPose, // Pose supplier
              this.kinematics, // SwerveDriveKinematics
-             new PIDController(2, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-             new PIDController(2, 0, 0), // Y controller (usually the same values as X controller)
-             new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+             new PIDController(xyP, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+             new PIDController(xyP, 0, 0), // Y controller (usually the same values as X controller)
+             new PIDController(rotP, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
              this::setModuleStates, // Module states consumer
-             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
              this // Requires this drive subsystem
          )
      );
@@ -210,15 +192,18 @@ public class Base extends SubsystemBase {
     return positions;
   }
   
+  public void resetOdometry() {
+    resetAllRelEncoders();
+    pose = new Pose2d();
+    
+    odometry.resetPosition(getHeading(), getPositions(), pose);
+  }
+
   public Rotation2d getHeading() {
     return Rotation2d.fromDegrees(getHeadingDeg());
   }
-
   public double getHeadingDeg() {
-    // return -gyro.getRoll();
-    // return -gyro.getPitch();
     return -gyro.getAngle();
-    // return 0;
   }
 
   public double getRoll() {
@@ -227,53 +212,38 @@ public class Base extends SubsystemBase {
   public double getPitch() {
     return gyro.getPitch();
   }
-
-  public void resetOdometry() {
-    resetAllRelEncoders();
-    pose = new Pose2d();
-    
-    odometry.resetPosition(getHeading(), getPositions(), pose);
-  }
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putBoolean("DEFENSE MODE", getDefenseMode());
-    // SmartDashboard.putNumber("Gyro", getHeadingDeg());
-
-    // SmartDashboard.putNumber("Front left module", frontLeftModule.getAngleDeg());
-    // SmartDashboard.putNumber("Front right module", frontRightModule.getAngleDeg());
-    // SmartDashboard.putNumber("Back left module", backLeftModule.getAngleDeg());
-    // SmartDashboard.putNumber("Back right module", backRightModule.getAngleDeg());
-
-    // SmartDashboard.putNumber("front left mag", frontLeftModule.getMagDeg());
-    // SmartDashboard.putNumber("front right mag", frontRightModule.getMagDeg());
-    // SmartDashboard.putNumber("back left mag", backLeftModule.getMagDeg());
-    // SmartDashboard.putNumber("back right mag", backRightModule.getMagDeg());
-
-    // SmartDashboard.putString("odometry pose", odometry.getPoseMeters().toString());
-
-    // SmartDashboard.putBoolean("isCalibrating", gyro.isCalibrating());
-
-    // SmartDashboard.putNumber(, KAngleD)
-
-    odometry.update(getHeading(), getPositions());
-    pose = odometry.getPoseMeters();
-  }
-
-  public double getDriveSpeedFactor()
-  {
+  
+  public double getDriveSpeedFactor() {
     return driveSpeedFactor;
   }
-  public void setDriveSpeedFactor(double set)
-  {
-    driveSpeedFactor = set;
+  public void setDriveSpeedFactor(double speedFactor) {
+    driveSpeedFactor = speedFactor;
   }
-
+  
+  public double getRotSpeedFactor() {
+    return rotSpeedFactor;
+  }
+  public void setRotSpeedFactor(double speedFactor) {
+    rotSpeedFactor = speedFactor;
+  }
+  
   public boolean getDefenseMode() {
     return defenseMode;
   }
   public void setDefenseMode(boolean defenseMode) {
     this.defenseMode = defenseMode;
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Gyro", getHeadingDeg());
+    SmartDashboard.putString("odometry pose", odometry.getPoseMeters().toString());
+    SmartDashboard.putNumber("BackLeftCanCoderPos", backLeftModule.getMagDegRaw());
+    SmartDashboard.putNumber("FrontLeftCanCoderPos", frontLeftModule.getMagDegRaw());
+    SmartDashboard.putNumber("BackRightCanCoderPos", backRightModule.getMagDegRaw());
+    SmartDashboard.putNumber("FrontRightCanCoderPos", frontRightModule.getMagDegRaw());
+    odometry.update(getHeading(), getPositions());
+    pose = odometry.getPoseMeters();
   }
 }
   

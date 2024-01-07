@@ -2,32 +2,29 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Base;
+package frc.robot.commands.Base.Resets;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Base;
-public class ToggleSpeed extends CommandBase {
-  private Base base;
-//   private 
-private double driveSpeedFactor;
-private double rotSpeedFactor;
 
-  public ToggleSpeed(Base base, double driveSpeedFactor, double rotSpeedFactor) {
+public class ResetEncoders extends CommandBase {
+  private Base base;
+  /** Creates a new ResetEncoders. */
+  public ResetEncoders(Base base) {
     this.base = base;
-    this.driveSpeedFactor = driveSpeedFactor;
-    this.rotSpeedFactor = rotSpeedFactor;
     addRequirements(base);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() 
-  {
-    base.setDriveSpeedFactor(driveSpeedFactor);
-    base.setRotSpeedFactor(rotSpeedFactor);
+  public void initialize() {
+    base.resetAllRelEncoders();
+    base.resetGyro();
   }
 
-  
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
