@@ -24,6 +24,15 @@ import frc.robot.commands.Base.DriveWithJoysticks;
 import frc.robot.commands.Base.ToggleSpeed;
 import frc.robot.commands.Base.Resets.ResetEncodersTeleop;
 import frc.robot.subsystems.Base;
+import frc.robot.subsystems.Sparkmax1;
+import frc.robot.subsystems.Sparkmax2;
+import frc.robot.subsystems.Sparkmax3;
+import frc.robot.subsystems.Sparkmax4;
+import frc.robot.commands.Prototype.MoveSparkmax1;
+import frc.robot.commands.Prototype.MoveSparkmax2;
+import frc.robot.commands.Prototype.MoveSparkmax3;
+import frc.robot.commands.Prototype.MoveSparkmax4;
+
 
 
 
@@ -36,6 +45,15 @@ import frc.robot.subsystems.Base;
 public class RobotContainer {
   //Subsystems
   private final Base base = new Base();
+  private final Sparkmax1 sparkmax1 = new Sparkmax1();
+  private final Sparkmax2 sparkmax2 = new Sparkmax2();
+  private final Sparkmax3 sparkmax3 = new Sparkmax3();
+  private final Sparkmax4 sparkmax4 = new Sparkmax4();
+
+  private final MoveSparkmax1 movesparkmax1 = new MoveSparkmax1(sparkmax1);
+  private final MoveSparkmax2 movesparkmax2 = new MoveSparkmax2(sparkmax2);
+  private final MoveSparkmax3 movesparkmax3 = new MoveSparkmax3(sparkmax3);
+    private final MoveSparkmax4 movesparkmax4 = new MoveSparkmax4(sparkmax4);
 
   
   
@@ -205,9 +223,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindings(
+
+  ) {
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
+    logitechBtnA.whileTrue(movesparkmax1);
+    logitechBtnB.whileTrue(movesparkmax2);
+    logitechBtnY.whileTrue(movesparkmax3);
+    logitechBtnX.whileTrue(movesparkmax4);
+
 
     // if LB and RB are held and one is released, go back to previous speed
     if (!logitechBtnLB.getAsBoolean()) { 
