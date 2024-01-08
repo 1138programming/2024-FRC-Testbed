@@ -4,11 +4,15 @@
 
 package frc.robot.commands.TalonPrototype;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Talon2;
 
-public class MoveTalon1 extends Command {
+public class MoveTalon2 extends CommandBase {
+  private Talon2 talon2;
   /** Creates a new MoveTalon1. */
-  public MoveTalon1() {
+  public MoveTalon2(Talon2 talon2) {
+    this.talon2 = talon2;
+    addRequirements(talon2);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -18,7 +22,9 @@ public class MoveTalon1 extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    talon2.moveMotor(0.5);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
