@@ -2,10 +2,10 @@ package frc.robot.commands.Base;
 
 import frc.robot.subsystems.TestBed;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class Piston extends CommandBase {
+public class Piston extends Command {
     TestBed testbed;
     public Piston() {
         testbed = new TestBed();

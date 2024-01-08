@@ -4,9 +4,9 @@
 
 package frc.robot.commands.Base;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Base;
-public class ToggleSpeed extends CommandBase {
+public class ToggleSpeed extends Command {
   private Base base;
 //   private 
 private double driveSpeedFactor;

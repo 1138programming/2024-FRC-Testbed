@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolea
  * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
@@ -91,10 +91,10 @@ public final class Constants {
   // Offsets for absolute encoders, used to set up angle encoders
 
   // double check
-  public static final double KBackLeftOffset = -29.1796875;
-  public static final double KBackRightOffset = -22.587890; 
-  public static final double KFrontLeftOffset = -315.263671;
-  public static final double KFrontRightOffset = -77.34375; 
+  public static final double KBackLeftOffset = -0.0810546875; //-29.1796875 deg
+  public static final double KBackRightOffset = -0.0627441389; //-22.587890 deg 
+  public static final double KFrontLeftOffset = -0.875732419; //-315.263671 deg
+  public static final double KFrontRightOffset = -0.21484375; //-77.34375 
   
     // Describes the locations of the swerve modules relative to the center of the robot
   // Important for kinematics

@@ -7,11 +7,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax; // Neos and 775
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -25,8 +23,8 @@ public class TestBed extends SubsystemBase {
   private CANSparkMax m2;
   private CANSparkMax m3;
   private CANSparkMax m4;
-  private TalonSRX t1;
-  private TalonSRX t2;
+  private TalonFX t1;
+  private TalonFX t2;
   private DoubleSolenoid s1;
   private DoubleSolenoid s2;
   private DoubleSolenoid s3;
@@ -38,8 +36,8 @@ public class TestBed extends SubsystemBase {
     // m2 = new CANSparkMax(2,MotorType.kBrushless);
     // m3 = new CANSparkMax(3,MotorType.kBrushless);
     // m4 = new CANSparkMax(4,MotorType.kBrushless);
-    t1 = new TalonSRX(1);
-    t2 = new TalonSRX(2);
+    t1 = new TalonFX(1);
+    t2 = new TalonFX(2);
    
     s1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 4);
     s1.set(DoubleSolenoid.Value.kReverse);
@@ -56,12 +54,12 @@ public class TestBed extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  // public void moveSpark(CANSparkMax canSparkMaxID, double speed) {
-  //   canSparkMaxID.set(speed);
-  // }
-  public void moveTalon(TalonSRX t, double speed)
+  public void moveSpark(CANSparkMax canSparkMaxID, double speed) {
+    canSparkMaxID.set(speed);
+  }
+  public void moveTalon(TalonFX t, double speed)
   {
-    t.set(ControlMode.PercentOutput, speed);
+    t.set(speed);
   }
   public void movepiston () {
     System.out.println( s1.get());

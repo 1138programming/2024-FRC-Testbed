@@ -158,11 +158,21 @@ gradle-app.setting
 .settings/
 bin/
 
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# Fleet
+.fleet
+
 # Simulation GUI and other tools window save file
 *-window.json
-src/main/java/frc/robot/commands/Scoring/stopScoring.java
-src/main/java/frc/robot/commands/Scoring/openClaw.java
-src/main/java/frc/robot/commands/Scoring/moveLiftToPos.java
-src/main/java/frc/robot/commands/Scoring/moveFlipper.java
-src/main/java/frc/robot/commands/Scoring/moveClaw.java
-src/main/java/frc/robot/commands/Scoring/Lift/StopScoring.java
+
+# Simulation data log directory
+logs/
+
+# Folder that has CTRE Phoenix Sim device config storage
+ctre_sim/

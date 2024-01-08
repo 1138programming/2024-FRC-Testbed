@@ -2,15 +2,21 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.DeviceIdentifier;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkBase.IdleMode;
+// import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 // import com.revrobotics.CANSparkMaxLowLevel.FollowConfig.Config;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -25,7 +31,7 @@ public class SwerveModule extends SubsystemBase {
   private CANSparkMax driveMotor;
 
   // magEncoder = absolute encoder to reset position of relative angle encoders
-  private CANCoder canCoder;
+  private CANcoder canCoder;
 
   // Relative encoders are used for robot odometry and controlling speed/position
   private RelativeEncoder driveEncoder;
@@ -51,16 +57,17 @@ public class SwerveModule extends SubsystemBase {
     
     this.driveMotor.setSmartCurrentLimit(KDriveMotorCurrentLimit);
     this.angleMotor.setSmartCurrentLimit(KAngleMotorCurrentLimit);
+
+    MagnetSensorConfigs canCoderConfig = new MagnetSensorConfigs();
     
-    CANCoderConfiguration config = new CANCoderConfiguration();
-    config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-    config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
-    config.sensorDirection = false;
-    config.magnetOffsetDegrees = offset;
-    
-    canCoder = new CANCoder(encoderPort);
-    canCoder.configAllSettings(config);
-    canCoder.setPositionToAbsolute();
+    canCoderConfig.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    canCoderConfig.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    canCoderConfig.MagnetOffset = offset; // CHANGE TO ROTATIONS
+// 
+
+    canCoder = new CANcoder(encoderPort);
+    canCoder.getConfigurator().apply(canCoderConfig);
+    // canCoder.setPosition(0); DONT USE THIS IT WILL MESS UP SET UP
 
     driveEncoder = driveMotor.getEncoder();
     angleEncoder = angleMotor.getEncoder();
@@ -76,7 +83,7 @@ public class SwerveModule extends SubsystemBase {
     setAbsoluteOffset(offset);
     // this.driveMotor.burnFlash();
     // feedforward = new SimpleMotorFeedforward(ks, kv, ka);
-    driveController = new PIDController(0.64442, 0, 0);
+    driveController = new PIDController(0.64442, 0, 0); //Reset These Values
   }
   
   
@@ -142,7 +149,7 @@ public class SwerveModule extends SubsystemBase {
   
   // Angle Encoder getters
   public double getMagDegRaw() {
-    double pos = canCoder.getPosition();
+    double pos = canCoder.getAbsolutePosition().getValueAsDouble();
     return pos;
   }
   public double getAngleDeg() {

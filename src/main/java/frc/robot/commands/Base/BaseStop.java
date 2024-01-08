@@ -6,9 +6,9 @@ package frc.robot.commands.Base;
 
 import frc.robot.subsystems.Base;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class BaseStop extends CommandBase {
+public class BaseStop extends Command {
   private final Base base;
 
   /** Creates a new DriveWithJoysticks. */

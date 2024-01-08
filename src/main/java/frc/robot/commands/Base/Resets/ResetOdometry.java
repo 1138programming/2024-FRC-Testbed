@@ -4,10 +4,10 @@
 
 package frc.robot.commands.Base.Resets;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Base;
 
-public class ResetOdometry extends CommandBase {
+public class ResetOdometry extends Command {
   private Base base;
   /** Creates a new ResetEncoders. */
   public ResetOdometry(Base base) {
