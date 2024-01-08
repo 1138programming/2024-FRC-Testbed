@@ -245,15 +245,16 @@ public class RobotContainer {
   ) {
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
+
     logitechBtnA.whileTrue(movesparkmax1);
     logitechBtnB.whileTrue(movesparkmax2);
     logitechBtnY.whileTrue(movesparkmax3);
     logitechBtnX.whileTrue(movesparkmax4);
 
-    logitechBtnA.whileTrue(moveTalon1);
-    logitechBtnB.whileTrue(moveTalon2);
-    logitechBtnX.whileTrue(moveTalon3);
-    logitechBtnY.whileTrue(moveTalon4);
+    xboxBtnA.whileTrue(moveTalon1);
+    xboxBtnB.whileTrue(moveTalon2);
+    xboxBtnX.whileTrue(moveTalon3);
+    xboxBtnY.whileTrue(moveTalon4);
 
     // if LB and RB are held and one is released, go back to previous speed
     if (!logitechBtnLB.getAsBoolean()) { 
