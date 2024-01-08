@@ -19,7 +19,6 @@ public class ResetEncoders extends CommandBase {
   @Override
   public void initialize() {
     base.resetAllRelEncoders();
-    base.resetGyro();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

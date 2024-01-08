@@ -68,14 +68,14 @@ public class SwerveModule extends SubsystemBase {
     driveEncoder.setPositionConversionFactor(KDriveMotorRotToMeter);
     driveEncoder.setVelocityConversionFactor(KDriveMotorRPMToMetersPerSec);
     
-    angleEncoder.setPositionConversionFactor(KAngleMotorRotToDeg);
+    angleEncoder.setPositionConversionFactor(KAngleGearRatio);
 
     angleController = new PIDController(KAngleP, KAngleI, KAngleD);
     angleController.enableContinuousInput(-180, 180); // Tells PIDController that 180 deg is same in both directions
 
     setAbsoluteOffset(offset);
     // this.driveMotor.burnFlash();
-    feedforward = new SimpleMotorFeedforward(ks, kv, ka);
+    // feedforward = new SimpleMotorFeedforward(ks, kv, ka);
     driveController = new PIDController(0.64442, 0, 0);
   }
   

@@ -4,12 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
@@ -29,30 +23,9 @@ public final class Constants {
   public static final int KFrontRightMagEncoderID = 2;
   public static final int KBackLeftMagEncoderID = 3;
   public static final int KBackRightMagEncoderID = 4;
-  public static final int KIntakeCanCoder = 5;
-  public static final int KFlipperCanCoder = 6;
   
   // End of Sensing - CANBUS **************************************************
   
-  // Sensing - DIO -------------------------------------------------------------
-
-  // Scoring - 2 in total
-  public static final int KScoringTopLimitSwitch = 6;
-  public static final int KScoringBottomLimitSwitch = 9;
-  public static final int KLiftEncoderA = 2; // Through Bore Encoder: uses 2 ports
-  public static final int KLiftEncoderB = 3;
-  
-  // Intake - 3 in total
-  public static final int KIntakeTopLimitId = 4; 
-  public static final int KIntakeBottomLimitId = 8; // Not being used?
-  
-  // End of Sensing - DIO *****************************************************
-  
-  // Servos and LEDs - PWM -------------------------------------------------------
-  
-  public static final int KLEDPort = 5;
-  
-  // End Servos and LEDs - PWM ************************************************
   
   // Motor IDs by Subsystem ------------------------------------------------------
   
@@ -68,15 +41,6 @@ public final class Constants {
   
   public static final int KBackRightAngleMotorID = 19;  	// SparkMax + NEO
   public static final int KBackRightDriveMotorID = 18;  	// SparkMax + NEO
-  
-  // Intake
-  public static final int KSpaghettiIntakeMotorID = 7;   // Talon + 775
-  public static final int KSwivelIntakeMotorID = 6;     // Talon + 775
-  
-  // Scoring
-  public static final int KFlipperRollerMotorID = 15; //SparkMax + Neo
-  public static final int KFlipperSwivelMotorID = 16;	// Talon + 775
-  public static final int KLiftMotorID = 17;
   
   // End of Motor Section *****************************************************
   
@@ -100,20 +64,20 @@ public final class Constants {
   public static final double KNeoMaxRPM = 5700;
   
   // Sets up drive encoders to use meters as the unit
-  private static final double KDriveMotorGearRatio = 1/6.55;
+
+  // FIND VALUES FOR TESTBED
+  private static final double KDriveMotorGearRatio = 1/6.75;
   private static final double KWheelDiameterMeters = 0.1016;
   public static final double KDriveMotorRotToMeter = KDriveMotorGearRatio * KWheelDiameterMeters * Math.PI;
   
   public static final double KDriveMotorRPMToMetersPerSec = KDriveMotorRotToMeter / 60;
   
-  public static final double KAngleMotorRotToDeg = 35;
-  public static final double KPhysicalMaxDriveSpeedMPS = KNeoMaxRPM * KDriveMotorRPMToMetersPerSec;
-  public static final double KMaxAngularSpeed = 3.5; 
-
-  public static final double KTimedDriveSpeed = 0.3;
+  public static final double KAngleGearRatio = 21.42857; // 150/7 : 1
   
-  // not used, may be useful to know/keep
-  private static final double KAngleMotorShaftToWheelRatio = 1 / 10.2857;
+  public static final double KPhysicalMaxDriveSpeedMPS = KNeoMaxRPM * KDriveMotorRPMToMetersPerSec;
+
+  // find for testbed
+  public static final double KMaxAngularSpeed = 3.5; 
   
     // Low and high percent: sets max speed of drivetrain for driver
   public static final double KBaseDriveLowPercent = 0.25;
@@ -125,14 +89,16 @@ public final class Constants {
   public static final double KBaseRotMaxPercent = 1.5;
   
   // Offsets for absolute encoders, used to set up angle encoders
-  public static final double KFrontLeftOffset = -257.90;
-  public static final double KFrontRightOffset = -37.00;
-  public static final double KBackLeftOffset = -316.07;
-  public static final double KBackRightOffset = -255.23;  
+
+  // double check
+  public static final double KBackLeftOffset = -29.1796875;
+  public static final double KBackRightOffset = -22.587890; 
+  public static final double KFrontLeftOffset = -315.263671;
+  public static final double KFrontRightOffset = -77.34375; 
   
     // Describes the locations of the swerve modules relative to the center of the robot
   // Important for kinematics
-  public static final double KWheelDistanceFromCenter = 0.257175;
+  public static final double KWheelDistanceFromCenter = 0.3048;
   public static final Translation2d KFrontLeftLocation = new Translation2d(
     KWheelDistanceFromCenter, KWheelDistanceFromCenter
   );
@@ -163,97 +129,7 @@ public final class Constants {
   public static final boolean KBackRightDriveEncoderReversed = false;
 
   public static final double KGyroOffset = 180;
-  
-  
-  
-  // public static final double KIntakeOffset = 131;
-  // public static final double KIntakeSwivelTopPos = 29;
-  // public static final double KSwivelBottomPosition = 125;
-  // public static final double KIntakeSwivelShootPos = 59;
-  public static final double KIntakeOffset = 121;
-  public static final double KIntakeSwivelTopPos = 30;
-  public static final double KSwivelBottomPosition = 130; 
-  public static final double KIntakeSwivelShootPos = 49;
-  // public static final double KSwivelGearRatio = 14 / 34;  // Was randomly giving value of 0 :(
-    public static final double KSwivelGearRatio = 0.41176;
-    public static final double KIntakeSwivelOffset = 1;
-    
-  //Speeds and stuff
-  public static final double KIntakeSpaghettiSpeed = 0.8;
-  public static final double KIntakeSpaghettiShootSpeed = -0.85;
-  
-  public static final double KIntakeSwivelSpeed = 0.25;  
-  public static final double KIntakeSwivelMaxPassiveSpeed = 0.25;
-  
-  // Intake
-  public static final double KIntakeP = 0.0065; // TBD
-  public static final double KIntakeI = 0.001; // TBD 
-  public static final double KIntakeD = 0; // TBD
-  
-  public static final double KIntakeSwivelCanCoderRatio = 0.41176470588; // 14/34
-
-  // Timing for lift
-  public static final double KIntakeThenLiftTime = 0.5;
-  
-  // Scoring
-  public static final int KScoringEncoder1ID = 6; //name can be changed later
-  public static final int KScoringEncoder2ID = 7; //name can be changed later
-  
-  // Flipper PID
-  public static final double KFlipperP = 0.03; // TBD
-  public static final double KFlipperI = 0; // TBD
-  public static final double KFlipperD = 0; // TBD
-  public static final double KScoringFlipPos = 0; //TBD
-
-  public static final double KFlipperCanCoderRatio = 0.4375;
-  
-  // lift PID
-  public static final double KLiftP = 0.0005; //TBD
-  public static final double KLiftI = 0; //TBD
-  public static final double KLiftD = 0.0000005; //TBD
-  
-  public static final double KInnerLiftP = 0; //TBD
-  public static final double KInnerLiftI = 0; //TBD
-  public static final double KInnerLiftD = 0; //TBD
-  public static final double KLiftRotToFoot = 0; //TBD
-  
-  // Orientation
-  public static final boolean KCubeMode = false;
-  public static final boolean KConeMode = true;
-  
-  // Scoring
-  //public static final double KClawMotorSpeed = 0.5; //TBD
-  public static final double KClawMotorSpeed = 0.6;
-  public static final double KClawSwivelMotorSpeed = 0.15;
-  public static final double KAngleMotorSpeed = 0; //TBD
-  public static final double KElevatorSpeed = 0.5; //TBD
-  
-  public static final double KLiftReadyPos = 0; //TBD
-  public static final double KLiftLowPos = 0; //TBD
-  public static final double KLiftMediumPos = 4284.75;
-  public static final double KLiftHighPos = 8836.25; 
-  public static final double KLiftShelfPos = 6988; //TBD
-  
-  public static final double KClawSwivelKP = 0.00001;
-  public static final double KClawSwivelKI =0;
-  public static final double KClawSwivelKd =0;
-  
-  // public static final double KFlipperInPos = 0;
-  // public static final double KFlipperStartPos = 0;
-  // public static final double KFlipperOutPos = 43;
-
-  public static final double KLiftDeadzone = 2;
-  public static final double KInnerLiftDeadzone = 4;
-  
-
-  // public static final double KInnerLiftHighPos= 0;
-  // public static final double KInnerLiftLowPos= 0;
-  
-  public static final boolean KWristFlip = true; 
-  
-  public static final double KWristFlipPos = 0.86;
-  public static final double KWristNoFlipPos = 0;
-  public static final double KWristCubePos = 0.35;
+ 
   
   //Limelight
   public static final double KLimelightHeight = 19.5; // inches
@@ -314,16 +190,6 @@ public final class Constants {
   public static final double KTapeLimelightMoveI = 0;
   public static final double KTapeLimelightMoveD = 0;
   
-  // Additional LED info:
-  public static final int KLEDBuffer = 30;
-  public static enum KLEDSTATE {
-    OFF,
-    YELLOW,
-    PURPLE
-  };
-  public static final double KPPMaxVelocity = 4;
-  public static final double KPPMaxAcceleration = 3;
-  
   public static final double KXControllerP = 1;
   public static final double KXControllerI = 0;
   public static final double KXControllerD = 0;
@@ -339,70 +205,8 @@ public final class Constants {
   public static final double KRotMaxVelocity = 6.28;
   public static final double KRotMaxAcceleration = 3.14;
   
-  // Auto balance PID
-  public static final double KBalanceP = 0.008;
-  // public static final double KBalanceP = 0.0065;
-  public static final double KBalanceI = 0;
-  public static final double KBalanceD = 0.001;
-
-  // Poses for DriveToPose autons++++++++++++++++++
-  public static final Pose2d KOpenSideCubePickupBlue = new Pose2d(4.3, -0.45, new Rotation2d());
-  public static final Pose2d KOpenSideBackToCommunityBlue = new Pose2d(0.5, -0.2, Rotation2d.fromDegrees(145));
-  public static final Pose2d KOpenSideShootPositionBlue = new Pose2d(0.32, -0.2, Rotation2d.fromDegrees(180));
-
-  public static final Pose2d KOpenSideCubePickupRed = new Pose2d(4.3, 0.45, new Rotation2d());
-  public static final Pose2d KOpenSideBackToCommunityRed = new Pose2d(0.5, 0.2, Rotation2d.fromDegrees(145));
-  public static final Pose2d KOpenSideShootPositionRed = new Pose2d(0.32, 0.2, Rotation2d.fromDegrees(180));
-
-  public static final Pose2d KCableSideCubePickupBlue = new Pose2d(4.3, 0.45, new Rotation2d());
-  public static final Pose2d KCableSideCrossCableBlue = new Pose2d(2.85, 0.28, new Rotation2d());
-  public static final Pose2d KCableSideCubePickupAfterCrossBlue = new Pose2d(4.5, 0.45, new Rotation2d());
-  
-  public static final Pose2d KCableSideBackToCommunityBlue = new Pose2d(0.3, 0, new Rotation2d());
-  public static final Pose2d KCableSideShootPositionBlue = new Pose2d(0.3, 0, Rotation2d.fromDegrees(180));
-  
-  
-  public static PathConstraints KPathPLannerConstraints = new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration);
-
-  // Pathplanner trajectories
-  //left
-  
-  public static final PathPlannerTrajectory KLeftSideCubeToBalance = PathPlanner.loadPath("LeftSideCubeToBalance", KPathPLannerConstraints);
-  public static final PathPlannerTrajectory KLeftSideCubeToStation = PathPlanner.loadPath("LeftSideCubeToStation", KPathPLannerConstraints);
-  public static final PathPlannerTrajectory KPickUpLeftSide = PathPlanner.loadPath("PickUpLeftSide", new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration));
-  public static final PathPlannerTrajectory KLeftSidePickup2 = PathPlanner.loadPath("LeftSidePickup2", KPathPLannerConstraints);
-  
-  public static final PathPlannerTrajectory KLeftSidePickupToBalance = PathPlanner.loadPath("LeftSidePickupToBalance", new PathConstraints(2, 2));
-  public static final PathPlannerTrajectory KLeftSidePickup2ToBalance = PathPlanner.loadPath("LeftSidePickup2ToBalance", new PathConstraints(2, 2));
-  //Right
-  
-  public static final PathPlannerTrajectory KRightSideLeaveCommunity = PathPlanner.loadPath("LeftSideLeaveCommunity", new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration));
-  public static final PathPlannerTrajectory KRightSideLeaveAndGoToStation = PathPlanner.loadPath("RightSideLeaveAndGoToStation", new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration));
-  public static final PathPlannerTrajectory KLeftSideLeaveCommunity = PathPlanner.loadPath("LeftSideLeaveCommunity", new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration));
-  public static final PathPlannerTrajectory KLeftLeaveCommunityAndGoAway = PathPlanner.loadPath("LeftLeaveAndGoAway", new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration));
-  public static final PathPlannerTrajectory KPickUpRightSide = PathPlanner.loadPath("PickUpRightSide", new PathConstraints(KPPMaxVelocity, KPPMaxAcceleration));
-  
-  //sys id config numbers 
-  public static final double ks = 0.20309;
-  public static final double kv = 2.5574;
-  public static final double ka = 0.38422;
-  
-  public static final double KFlipperOffShelfPos = 205;
-  public static final double KFlipperStowedPos = 81;
-  
-  public static final double KFlipperSwivelSpeed = 0.1;
-  public static final double KFlipperDeadzone = 0.5;
-
-  // public static final double KFlipperSwivelOffset = 213;
-  public static final double KFlipperSwivelOffset = 223;
-  // public static final double KFlipperSwivelOffset = 318;
-
-  public static final double KFlipperMaxSpeed = 0.5;
-  public static final double KFlipperMinSpeed = 0.15;  
-  
-  public static final double KFlipperRollerIntakeSpeedCone = 0.5;
-  public static final double KFlipperRollerOuttakeSpeedCone = -0.7;
-  public static final double KFlipperRollerIntakeSpeedCube = -0.4;
-  public static final double KFlipperRollerOuttakeSpeedCube = 0.3;
-  
+  // need to find for testbed
+  // public static final double ks = 0.20309;
+  // public static final double kv = 2.5574;
+  // public static final double ka = 0.38422;
 }
