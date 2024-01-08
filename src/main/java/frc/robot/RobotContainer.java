@@ -17,6 +17,15 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import frc.robot.subsystems.Talon1;
+import frc.robot.subsystems.Talon2;
+import frc.robot.subsystems.Talon3;
+import frc.robot.subsystems.Talon4;
+import frc.robot.commands.TalonPrototype.MoveTalon1;
+import frc.robot.commands.TalonPrototype.MoveTalon2;
+import frc.robot.commands.TalonPrototype.MoveTalon3;
+import frc.robot.commands.TalonPrototype.MoveTalon4;
+
 
 //base 
 import frc.robot.commands.Base.DriveWithJoysticks;
@@ -56,6 +65,14 @@ public class RobotContainer {
     private final MoveSparkmax4 movesparkmax4 = new MoveSparkmax4(sparkmax4);
 
   
+  private final Talon1 talon1 = new Talon1();
+  private final Talon2 talon2 = new Talon2();
+  private final Talon3 talon3 = new Talon3();
+  private final Talon4 talon4 = new Talon4();
+  private final MoveTalon1 moveTalon1 = new MoveTalon1(talon1);
+  private final MoveTalon2 moveTalon2 = new MoveTalon2(talon2);
+  private final MoveTalon3 moveTalon3 = new MoveTalon3(talon3);
+  private final MoveTalon4 moveTalon4 = new MoveTalon4(talon4);
   
   // Base
   private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
@@ -151,7 +168,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Auton Number", 1);
 
     base.setDefaultCommand(driveWithJoysticks);
-   
+    
 
     //Game controllers
     logitech = new Joystick(KLogitechPort); //Logitech Dual Action
@@ -233,6 +250,10 @@ public class RobotContainer {
     logitechBtnY.whileTrue(movesparkmax3);
     logitechBtnX.whileTrue(movesparkmax4);
 
+    logitechBtnA.whileTrue(moveTalon1);
+    logitechBtnB.whileTrue(moveTalon2);
+    logitechBtnX.whileTrue(moveTalon3);
+    logitechBtnY.whileTrue(moveTalon4);
 
     // if LB and RB are held and one is released, go back to previous speed
     if (!logitechBtnLB.getAsBoolean()) { 
