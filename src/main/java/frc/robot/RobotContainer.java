@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import frc.robot.commands.Base.Piston;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,7 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
+import frc.robot.commands.Testbed.Piston;
+import frc.robot.commands.Testbed.MoveVortexWithJoystick;
 import frc.robot.subsystems.Base;
+import frc.robot.subsystems.Testbed;
 
 
 
@@ -34,18 +37,19 @@ import frc.robot.subsystems.Base;
  */
 public class RobotContainer {
   //Subsystems
-  // private final Base base = new Base();
-
-  
+  private final Base base = new Base();
+  private final Piston piston = new Piston();
+  private final Testbed testbed = new Testbed();
   
   // Base
-  // private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
-  // private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
-  // private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
-  // private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
-  
+  private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
+  private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
+  private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
+  private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
 
-  private final Piston piston = new Piston();
+  // Testbed
+  private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
+
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
   private static final int KLogitechPort = 0;
   private static final int KXboxPort = 1;  
@@ -102,14 +106,6 @@ public class RobotContainer {
 
   //Game Controllers
   public static Joystick logitech;
-
-
-
-
-
-
-
-
   public static Joystick compStreamDeck;
   public static Joystick testStreamDeck;
   public static Joystick tuningStreamDeck;
@@ -129,9 +125,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    testbed.setDefaultCommand(moveVortexWithJoystick);
+
     SmartDashboard.putNumber("Auton Number", 1);
 
-    // base.setDefaultCommand(driveWithJoysticks);
+    base.setDefaultCommand(driveWithJoysticks);
    
 
     //Game controllers
@@ -205,30 +203,30 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // logitechBtnLB.onTrue(toggleMaxSpeed);
-    // logitechBtnRB.onTrue(toggleLowSpeed);
-    logitechBtnB.onTrue(piston);
+    logitechBtnLB.onTrue(toggleMaxSpeed);
+    logitechBtnRB.onTrue(toggleLowSpeed);
+    // logitechBtnB.onTrue(piston);
+
 
     // if LB and RB are held and one is released, go back to previous speed
-    // if (!logitechBtnLB.getAsBoolean()) { 
-    //   logitechBtnRB.onFalse(toggleMidSpeed);
-    // } else {
-    //   logitechBtnRB.onFalse(toggleMaxSpeed);
-    // }
+    if (!logitechBtnLB.getAsBoolean()) { 
+      logitechBtnRB.onFalse(toggleMidSpeed);
+    } else {
+      logitechBtnRB.onFalse(toggleMaxSpeed);
+    }
 
-    // // if LB and RB are held and one is released, go back to previous speed
-    // if (!logitechBtnRB.getAsBoolean()) {
-    //   logitechBtnLB.onFalse(toggleMidSpeed);
-    // } else {
-    //   logitechBtnLB.onFalse(toggleLowSpeed);
-    // }
-
-    
+    // if LB and RB are held and one is released, go back to previous speed
+    if (!logitechBtnRB.getAsBoolean()) {
+      logitechBtnLB.onFalse(toggleMidSpeed);
+    } else {
+      logitechBtnLB.onFalse(toggleLowSpeed);
+    }    
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
+   * 
    * @return the command to run in autonomous
    */ 
   public Command getAutonomousCommand()

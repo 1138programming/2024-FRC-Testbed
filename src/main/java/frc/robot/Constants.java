@@ -30,17 +30,24 @@ public final class Constants {
   // Motor IDs by Subsystem ------------------------------------------------------
   
   // Base
-  public static final int KFrontLeftAngleMotorID = 9;  	// SparkMax + NEO
-  public static final int KFrontLeftDriveMotorID = 8;  	// SparkMax + NEO
+  public static final int KFrontLeftAngleMotorID = 1;  	// SparkMax + NEO
+  public static final int KFrontLeftDriveMotorID = 2;  	// SparkMax + NEO
   
-  public static final int KFrontRightAngleMotorID = 2;  	// SparkMax + NEO
-  public static final int KFrontRightDriveMotorID = 1;  	// SparkMax + NEO
+  public static final int KFrontRightAngleMotorID = 3;  	// SparkMax + NEO
+  public static final int KFrontRightDriveMotorID = 4;  	// SparkMax + NEO
   
-  public static final int KBackLeftAngleMotorID = 11;  	  // SparkMax + NEO
-  public static final int KBackLeftDriveMotorID = 10;  	  // SparkMax + NEO
+  public static final int KBackLeftAngleMotorID = 5;  	  // SparkMax + NEO
+  public static final int KBackLeftDriveMotorID = 6;  	  // SparkMax + NEO
   
-  public static final int KBackRightAngleMotorID = 19;  	// SparkMax + NEO
-  public static final int KBackRightDriveMotorID = 18;  	// SparkMax + NEO
+  public static final int KBackRightAngleMotorID = 7;  	// SparkMax + NEO
+  public static final int KBackRightDriveMotorID = 8;  	// SparkMax + NEO
+
+  // Testbed
+
+  public static final int KTalon1ID = 9;
+  public static final int KTalon2ID = 10;
+
+  public static final int KVortexID = 15;
   
   // End of Motor Section *****************************************************
   
@@ -93,7 +100,9 @@ public final class Constants {
   // double check
   public static final double KBackLeftOffset = -0.0810546875; //-29.1796875 deg
   public static final double KBackRightOffset = -0.0627441389; //-22.587890 deg 
-  public static final double KFrontLeftOffset = -0.875732419; //-315.263671 deg
+  public static final double KFrontLeftOffset = -0.90045464122; //-315.263671 deg
+  // public static final double KFrontLeftOffset = -0.875732419; //-315.263671 deg
+  // 0.02472222222 
   public static final double KFrontRightOffset = -0.21484375; //-77.34375 
   
     // Describes the locations of the swerve modules relative to the center of the robot

@@ -1,14 +1,14 @@
-package frc.robot.commands.Base;
+package frc.robot.commands.Testbed;
 
-import frc.robot.subsystems.TestBed;
+import frc.robot.subsystems.Testbed;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class Piston extends Command {
-    TestBed testbed;
+    Testbed testbed;
     public Piston() {
-        testbed = new TestBed();
+        testbed = new Testbed();
     }
 
     @Override
@@ -17,7 +17,7 @@ public class Piston extends Command {
 
     @Override
     public void execute() {
-        testbed.movepiston();
+        // testbed.movepiston();
 
     }
 
