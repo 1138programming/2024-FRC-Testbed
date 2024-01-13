@@ -2,32 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Base;
-
-import frc.robot.subsystems.Base;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BaseStop extends CommandBase {
-  private final Base base;
+import frc.robot.Constants.*;
+import frc.robot.subsystems.Intake;
 
-  /** Creates a new DriveWithJoysticks. */
-  public BaseStop(Base base) {
-    this.base = base;
-    addRequirements(base);
+public class SpinIntake extends CommandBase {
+  /** Creates a new SpinIntake. */
+
+  private Intake intake;
+
+  public SpinIntake(Intake intake) {
+
+    this.intake = intake;
+    addRequirements(intake);
+
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    base.resetAllRelEncoders();  
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    base.drive(0, 0, 0, true, 0);
+
+    intake.spinIntake(0.5);
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -39,6 +44,4 @@ public class BaseStop extends CommandBase {
   public boolean isFinished() {
     return false;
   }
-
-
 }

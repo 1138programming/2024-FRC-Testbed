@@ -9,8 +9,9 @@ import frc.robot.subsystems.Base;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveWithJoysticks extends Command {
+public class DriveWithJoysticks extends CommandBase {
 
   private final Base base;
 

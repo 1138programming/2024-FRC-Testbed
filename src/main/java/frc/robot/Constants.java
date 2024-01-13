@@ -23,6 +23,14 @@ public final class Constants {
   public static final int KFrontRightMagEncoderID = 2;
   public static final int KBackLeftMagEncoderID = 3;
   public static final int KBackRightMagEncoderID = 4;
+
+  // Intake
+  public static final int KIntakeEncoderID = 41;
+
+
+  // Intake
+  public static final int KIntakeMotorID = 40;
+  
   
   // End of Sensing - CANBUS **************************************************
   

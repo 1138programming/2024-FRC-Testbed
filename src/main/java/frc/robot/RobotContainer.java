@@ -207,7 +207,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // logitechBtnLB.onTrue(toggleMaxSpeed);
     // logitechBtnRB.onTrue(toggleLowSpeed);
-    logitechBtnB.onTrue(piston);
+    //logitechBtnB.toggleOnTrue(piston);
 
     // if LB and RB are held and one is released, go back to previous speed
     // if (!logitechBtnLB.getAsBoolean()) { 

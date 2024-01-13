@@ -5,9 +5,10 @@
 package frc.robot.commands.Base.Resets;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Base;
 
-public class ResetEncoders extends Command {
+public class ResetEncoders extends CommandBase {
   private Base base;
   /** Creates a new ResetEncoders. */
   public ResetEncoders(Base base) {

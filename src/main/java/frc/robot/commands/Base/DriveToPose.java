@@ -8,11 +8,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Base;
 import static frc.robot.Constants.*;
 
-public class DriveToPose extends Command {
+public class DriveToPose extends CommandBase{
   private final Base base;
   private Pose2d currentPose;
   private Pose2d targetPose;
