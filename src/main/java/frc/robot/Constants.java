@@ -214,6 +214,9 @@ public final class Constants {
   public static final double KRotMaxVelocity = 6.28;
   public static final double KRotMaxAcceleration = 3.14;
   
+//Trap
+  public static final int kTrapMotorID = 1; //placeholder
+
   // need to find for testbed
   // public static final double ks = 0.20309;
   // public static final double kv = 2.5574;
