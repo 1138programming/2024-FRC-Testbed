@@ -24,6 +24,8 @@ public final class Constants {
   public static final int KBackLeftMagEncoderID = 3;
   public static final int KBackRightMagEncoderID = 4;
   
+  //flywheel
+  public static final int KFlywheelEncoderID = 12;
   // End of Sensing - CANBUS **************************************************
   
   
@@ -41,6 +43,9 @@ public final class Constants {
   
   public static final int KBackRightAngleMotorID = 19;  	// SparkMax + NEO
   public static final int KBackRightDriveMotorID = 18;  	// SparkMax + NEO
+
+  //Flywheel
+  public static final int KFlyWheelMotorID = 14;
   
   // End of Motor Section *****************************************************
   
