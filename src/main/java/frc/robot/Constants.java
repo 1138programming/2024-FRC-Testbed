@@ -24,8 +24,22 @@ public final class Constants {
   public static final int KBackLeftMagEncoderID = 3;
   public static final int KBackRightMagEncoderID = 4;
   
-  //flywheel
+  //Flywheel Encoder
   public static final int KFlywheelEncoderID = 12;
+  public static final int KFlywheelEncoderRatio = 6;
+
+  //flywheel encoder velocity
+  public static double Kslowspinvelocity = 0.6;
+  public static double Kfastspinvelocity = 0.8;
+
+  //Flywheel Motor
+  public static final int KFlyWheelMotorID = 14;
+
+  //flywheel motor speed
+  public static final double KFlywheelspinfast = 0.9;
+  public static final double KFlywheelspinslow = 0.1;
+  
+
   // End of Sensing - CANBUS **************************************************
   
   
@@ -44,8 +58,6 @@ public final class Constants {
   public static final int KBackRightAngleMotorID = 19;  	// SparkMax + NEO
   public static final int KBackRightDriveMotorID = 18;  	// SparkMax + NEO
 
-  //Flywheel
-  public static final int KFlyWheelMotorID = 14;
   
   // End of Motor Section *****************************************************
   

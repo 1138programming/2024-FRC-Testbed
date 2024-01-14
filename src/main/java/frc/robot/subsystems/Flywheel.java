@@ -6,40 +6,84 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.revrobotics.CANSparkMax.IdleMode;
+//import com.revrobotics.CANSparkFlex.IdleMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Flywheel extends SubsystemBase {
   /** Creates a new Flywheel. */
   
-  private CANSparkMax vortexSparkFlex;
-
-  private RelativeEncoder vortexSpin;
-
-  private CANCoder flywheeelCanCoder;
+  private CANSparkFlex flywheelMotor;
   
+  private CANSparkFlex flywheelIndexerMotor;
+
+private double setSpeed;
+private double setVelocity;
+
+  private CANCoder flywheelCanCoder;
+
   public Flywheel() {
 
-    vortexSparkFlex = new CANSparkMax(KFlyWheelMotorID, MotorType.kBrushless);
+    flywheelMotor = new CANSparkFlex(KFlyWheelMotorID, MotorType.kBrushless);
 
-    flywheeelCanCoder = new CANCoder(KFlywheelEncoderID);
+    flywheelCanCoder = new CANCoder(KFlywheelEncoderID);
 
-    vortexSparkFlex.setIdleMode(IdleMode.kBrake);
+    flywheelMotor.setIdleMode(IdleMode.kBrake);
   }
-
+  public double getSpinEncoder() {
+    return flywheelCanCoder.getAbsolutePosition();
+}
+public double getSpinEncoderVelocity(){
+  return flywheelCanCoder.getVelocity();
+}
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 
 public void SpinFlywheel(double speed){
-  vortexSparkFlex.set(speed);
+  flywheelMotor.set(speed);
+}
+public void spinFlywheelToSpeed(){
+  flywheelMotor.set(setSpeed);
+}
+public double getTargetVelocity(){
+  return setVelocity;
+}
+public void setFlywheelSpeed(double speed, double velocity){
+  this.setSpeed = speed;
+  this.setVelocity = velocity;
+}
+
+ public void SpinFlywheelIndexer(double speed){
+  flywheelIndexerMotor.set(speed);
+ }
+
+public double getEncoderRaw() {
+  return flywheelCanCoder.getAbsolutePosition() * KFlywheelEncoderRatio;
+}
+public void spinFlywheelToPos(double setPoint){
+
+}
+public void encoder(double KFlywheelEncoder){
+
+  double RPMOutput = 0.0;
+
+  double rawOutput = RPMOutput * (4096/360);
+
+  // 4096 encoder counts per rev, on robotics, description
+  //dont have speed info, example CHANGE LATER!!!!
+
+  SmartDashboard.putBoolean("Flywheel Spinning", true);
+  flywheelMotor.set(rawOutput);
+
 }
 }

@@ -6,15 +6,14 @@ package frc.robot.commands.Flywheel;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.*;
 import frc.robot.subsystems.Flywheel;
 
-public class SpinFlywheel extends CommandBase {
 
-  private Flywheel flywheel;
+public class IndexFlywheel extends CommandBase {
+private Flywheel flywheel;
 
-  /** Creates a new SpinFlywheel. */
-  public SpinFlywheel(Flywheel flywheel) {
+  /** Creates a new IndexFlywheel. */
+  public IndexFlywheel(Flywheel flywheel) {
     this.flywheel = flywheel;
     addRequirements(flywheel);
 
@@ -28,7 +27,13 @@ public class SpinFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    flywheel.SpinFlywheel(0.64);
+  if (flywheel.getSpinEncoderVelocity() >= flywheel.getTargetVelocity()) {
+    flywheel.SpinFlywheelIndexer(0.9);
+  }
+  else{
+    flywheel.SpinFlywheelIndexer(0.0);
+  }
+
   }
 
   // Called once the command ends or is interrupted.
