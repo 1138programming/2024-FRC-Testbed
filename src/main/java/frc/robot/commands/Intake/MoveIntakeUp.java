@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.Intake;
 
-public class SpinIntake extends CommandBase {
-  /** Creates a new SpinIntake. */
+public class MoveIntakeUp extends CommandBase {
+  /** Creates a new MoveIntakeUp. */
 
   private Intake intake;
 
-  public SpinIntake(Intake intake) {
+  public MoveIntakeUp(Intake intake) {
 
     this.intake = intake;
     addRequirements(intake);
@@ -31,8 +31,8 @@ public class SpinIntake extends CommandBase {
   @Override
   public void execute() {
 
-    intake.spinIntake(0.5);
-    
+    intake.moveIntakeUp(0.5);
+
   }
 
   // Called once the command ends or is interrupted.
