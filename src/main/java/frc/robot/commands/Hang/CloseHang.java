@@ -25,7 +25,11 @@ public class CloseHang extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //hang.getHangPosition(KHang)
     hang.closeHang(0.5);
+    //if(getHangPosition() < getHangBottomLS()){
+      //moveHang
+    //}
   }
 
   // Called once the command ends or is interrupted.

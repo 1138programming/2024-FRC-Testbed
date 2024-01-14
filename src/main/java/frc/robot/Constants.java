@@ -28,7 +28,6 @@ public final class Constants {
   //Hang 
   public static final int KHangEncoderID = 15;
   public static final int KHangMotorID = 14;
-  //public static final int KHangeEncoderValue = 8;
   public static final int KHangEncoderPortID = 16;
   public static final int KHangTopLSID = 17;
   public static final int KHangBottomLSID = 20;
