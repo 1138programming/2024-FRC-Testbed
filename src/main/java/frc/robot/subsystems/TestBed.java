@@ -12,6 +12,9 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax; // Neos and 775
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Compressor;
@@ -26,11 +29,15 @@ public class Testbed extends SubsystemBase {
   private CANSparkMax m2;
   private CANSparkMax m3;
   private CANSparkMax m4;
+  private CANSparkMax []sparkMaxes;
+  private TalonSRX []TalonSRXs;
+  private CANSparkFlex []sparkFlexes;
 
-  private CANSparkFlex vortex;
+  private CANSparkFlex vortex1;
+  private CANSparkFlex vortex2;
 
-  private TalonFX t1;
-  private TalonFX t2;
+  private TalonSRX t1;
+  private TalonSRX t2;
   
   // private DoubleSolenoid s1;
   // private DoubleSolenoid s2;
@@ -39,16 +46,33 @@ public class Testbed extends SubsystemBase {
   // private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
   public Testbed() {
-    // m1 = new CANSparkMax(1,MotorType.kBrushless);
-    // m2 = new CANSparkMax(2,MotorType.kBrushless);
-    // m3 = new CANSparkMax(3,MotorType.kBrushless);
-    // m4 = new CANSparkMax(4,MotorType.kBrushless);
+    //SparkMax
+    m1 = new CANSparkMax(KSpark1ID, MotorType.kBrushless); 
+    m2 = new CANSparkMax(KSpark2ID, MotorType.kBrushless);
+    m3 = new CANSparkMax(KSpark3ID, MotorType.kBrushless);
+    m4 = new CANSparkMax(KSpark4ID, MotorType.kBrushless);
+    sparkMaxes = new CANSparkMax[4];
+    sparkMaxes[0] = m1;
+    sparkMaxes[1] = m2;
+    sparkMaxes[2] = m3;
+    sparkMaxes[3] = m4;
 
-    // vortex = new CANSparkFlex(KVortexID, MotorType.kBrushless);
+    //SparkFlex
+    vortex1 = new CANSparkFlex(KVortex1ID, MotorType.kBrushless);
+    vortex2 = new CANSparkFlex(KVortex2ID, MotorType.kBrushless);
+    sparkFlexes = new CANSparkFlex[2];
+    sparkFlexes[0] = vortex1;
+    sparkFlexes[1] = vortex2;
+
+    //TalonFX
+    t1 = new TalonSRX(KTalon1ID);
+    t2 = new TalonSRX(KTalon2ID);
+    TalonSRXs = new TalonSRX[2];
+    TalonSRXs[0] = t1;
+    TalonSRXs[1] = t2;
+
     
-    t1 = new TalonFX(KTalon1ID);
-    t2 = new TalonFX(KTalon2ID);
-   
+    
     // s1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 4);
     // s1.set(DoubleSolenoid.Value.kReverse);
     // s2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 5);
@@ -61,19 +85,20 @@ public class Testbed extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("vortex speed", vortex1.getEncoder().getVelocity());
   }
 
-  public void moveSpark(CANSparkMax canSparkMaxID, double speed) {
-    canSparkMaxID.set(speed);
+  public void moveSpark(int canSparkMaxID, double speed) {
+    sparkMaxes[canSparkMaxID].set(speed);
   }
-  public void moveTalon(TalonFX t, double speed)
+  public void moveTalon(int t, double speed)
   {
-    t.set(speed);
+    TalonSRXs[t].set(ControlMode.PercentOutput, speed);
   }
-  // public void moveVortex(double speed) {
-  //   vortex.set(speed);
-  // }
+  public void moveVortex(int vortexNum, double speed) {
+    vortex1.set(speed);
+    vortex2.set(speed);
+  }
 
   // public void movepiston () {
   //   System.out.println( s1.get());

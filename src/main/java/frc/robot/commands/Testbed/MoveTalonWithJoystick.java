@@ -4,34 +4,35 @@
 
 package frc.robot.commands.Testbed;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.Testbed;
 
-public class MoveVortexWithJoystick extends Command {
+public class MoveTalonWithJoystick extends Command {
   private Testbed testbed;
-
-  /** Creates a new moveVortexWithJoystick. */
-  public MoveVortexWithJoystick(Testbed testbed) {
+  private int talonNum;
+  /** Creates a new MoveSparkmax. */
+  public MoveTalonWithJoystick(Testbed testbed, int talonNum) {
     this.testbed = testbed;
+    this.talonNum = talonNum;
+  
     addRequirements(testbed);
   }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    testbed.moveVortex(0, Robot.m_robotContainer.getXboxRightYAxis());
-    // testbed.moveVortex(1, -Robot.m_robotContainer.getXboxRightYAxis());
-    SmartDashboard.putNumber("joystick", Robot.m_robotContainer.getXboxRightYAxis());
-    
+    testbed.moveTalon(talonNum, Robot.m_robotContainer.getXboxLeftYAxis());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // testbed.moveVortex(0, 0);
-    // testbed.moveVortex(1, 0);
+    testbed.moveTalon(talonNum, 0);
   }
 
   // Returns true when the command should end.

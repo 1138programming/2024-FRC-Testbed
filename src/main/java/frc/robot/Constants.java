@@ -46,8 +46,14 @@ public final class Constants {
 
   public static final int KTalon1ID = 9;
   public static final int KTalon2ID = 10;
+  
+  public static final int KSpark1ID = 11;
+  public static final int KSpark2ID = 12;
+  public static final int KSpark3ID = 13;
+  public static final int KSpark4ID = 14;
 
-  public static final int KVortexID = 15;
+  public static final int KVortex1ID = 15;
+  public static final int KVortex2ID = 16;
   
   // End of Motor Section *****************************************************
   

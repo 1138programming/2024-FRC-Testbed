@@ -22,8 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
-import frc.robot.commands.Testbed.Piston;
 import frc.robot.commands.Testbed.MoveVortexWithJoystick;
+import frc.robot.commands.Testbed.MoveTalonWithJoystick;
+import frc.robot.commands.Testbed.MoveSparkmax;
+import frc.robot.commands.Testbed.MoveSparkmaxWithJoystick;
+import frc.robot.commands.Testbed.MoveTalon;
 import frc.robot.subsystems.Base;
 import frc.robot.subsystems.Testbed;
 
@@ -38,7 +41,6 @@ import frc.robot.subsystems.Testbed;
 public class RobotContainer {
   //Subsystems
   private final Base base = new Base();
-  private final Piston piston = new Piston();
   private final Testbed testbed = new Testbed();
   
   // Base
@@ -46,10 +48,14 @@ public class RobotContainer {
   private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
   private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
   private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
-
+  
   // Testbed
   private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
-
+  private final MoveSparkmax moveSparkmax = new MoveSparkmax(testbed, 0);
+  private final MoveSparkmaxWithJoystick MoveSparkmaxWithJoystick = new MoveSparkmaxWithJoystick(testbed, 0);
+  private final MoveTalon MoveTalon = new MoveTalon(testbed, 1);
+  private final MoveTalonWithJoystick MoveTalonWithJoystick = new MoveTalonWithJoystick(testbed, 1);
+  
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
   private static final int KLogitechPort = 0;
   private static final int KXboxPort = 1;  
@@ -65,6 +71,12 @@ public class RobotContainer {
   private static final int KRightYAxis = 3;
   private static final int KLeftXAxis = 0;
   private static final int KRightXAxis = 2;
+
+  //Joystick Axis IDs 
+  private static final int KXboxLeftYAxis = 1;
+  private static final int KXboxRightYAxis = 5;
+  private static final int KXboxLeftXAxis = 0;
+  private static final int KXboxRightXAxis = 4;
 
   //Logitech Button Constants
   public static final int KLogitechButtonX = 1;
@@ -126,10 +138,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     testbed.setDefaultCommand(moveVortexWithJoystick);
+    base.setDefaultCommand(driveWithJoysticks);
 
     SmartDashboard.putNumber("Auton Number", 1);
 
-    base.setDefaultCommand(driveWithJoysticks);
    
 
     //Game controllers
