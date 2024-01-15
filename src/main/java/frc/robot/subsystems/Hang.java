@@ -20,8 +20,7 @@ import static frc.robot.Constants.KHangTopLSID;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-
-
+import edu.wpi.first.wpilibj.CAN;
 // add a limit switch
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -42,7 +41,9 @@ public class Hang extends SubsystemBase {
     //Motor
     hangMotor = new CANSparkMax(hangMotorID, MotorType.kBrushless);
     hangEncoder = new RelativeEncoder(null, KHangEncoderPortID);
-   
+   // CANSparkMax.getEncoder(null, KHangEncoderPortID);
+    //CANSparkMax.getEncoder(KHangEncoderPortID, 380);
+
     hangMotor.setIdleMode(IdleMode.kBrake);
     //this.hangMotor.setInverted(hangMotorReversed);
     // only use if necessary 
@@ -90,7 +91,7 @@ public class Hang extends SubsystemBase {
     return hangBottomLS.get();
   }
   //Limit Switches will be added later
-  public void hangStop(){
+  public void hangStop(double speed){
     hangMotor.set(0);
   }
   
