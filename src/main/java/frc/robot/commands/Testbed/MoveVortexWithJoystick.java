@@ -21,7 +21,7 @@ public class MoveVortexWithJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    testbed.moveVortex(0, Robot.m_robotContainer.getXboxRightYAxis());
+    testbed.moveVortex(Robot.m_robotContainer.getXboxRightYAxis());
     // testbed.moveVortex(1, -Robot.m_robotContainer.getXboxRightYAxis());
     SmartDashboard.putNumber("joystick", Robot.m_robotContainer.getXboxRightYAxis());
     

@@ -16,14 +16,14 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
+import frc.robot.commands.Base.BaseStop;
 //base 
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
 import frc.robot.commands.Testbed.MoveVortexWithJoystick;
 import frc.robot.commands.Testbed.MoveTalonWithJoystick;
+import frc.robot.commands.Testbed.MoveVortex;
 import frc.robot.commands.Testbed.MoveSparkmax;
 import frc.robot.commands.Testbed.MoveSparkmaxWithJoystick;
 import frc.robot.commands.Testbed.MoveTalon;
@@ -48,11 +48,12 @@ public class RobotContainer {
   private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
   private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
   private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
-  
+  private final BaseStop basestop = new BaseStop(base);
   // Testbed
-  private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
+  // private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
+  private final MoveVortex MoveVortex = new MoveVortex(testbed);
   private final MoveSparkmax moveSparkmax = new MoveSparkmax(testbed, 0);
-  private final MoveSparkmaxWithJoystick MoveSparkmaxWithJoystick = new MoveSparkmaxWithJoystick(testbed, 0);
+  private final MoveSparkmaxWithJoystick MoveSparkmaxWithJoystick = new MoveSparkmaxWithJoystick(testbed, 4);
   private final MoveTalon MoveTalon = new MoveTalon(testbed, 1);
   private final MoveTalonWithJoystick MoveTalonWithJoystick = new MoveTalonWithJoystick(testbed, 1);
   
@@ -137,8 +138,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    testbed.setDefaultCommand(moveVortexWithJoystick);
-    base.setDefaultCommand(driveWithJoysticks);
+    // testbed.setDefaultCommand(moveVortexWithJoystick);
+    base.setDefaultCommand(basestop);
 
     SmartDashboard.putNumber("Auton Number", 1);
 
@@ -217,7 +218,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
+
+    // xboxBtnA.onTrue(MoveVortex);
+    xboxBtnA.whileTrue(MoveSparkmaxWithJoystick);
     // logitechBtnB.onTrue(piston);
+
 
 
     // if LB and RB are held and one is released, go back to previous speed
@@ -290,7 +295,7 @@ public class RobotContainer {
   }
 
   public double getXboxLeftAxis() {
-    final double Y = xbox.getRawAxis(KLeftYAxis);
+    final double Y = xbox.getRawAxis(KXboxLeftYAxis);
     if(Y > KDeadZone || Y < -KDeadZone)
       return -Y;
     else 
@@ -298,7 +303,7 @@ public class RobotContainer {
   }
 
   public double getXboxLeftXAxis() {
-    final double X = xbox.getRawAxis(KRightXAxis);
+    final double X = xbox.getRawAxis(KXboxLeftXAxis);
     if(X > KDeadZone || X < -KDeadZone)
       return X;
     else 
@@ -306,7 +311,7 @@ public class RobotContainer {
   }
 
   public double getXboxRightXAxis() {
-    final double X = xbox.getRawAxis(KRightXAxis);
+    final double X = xbox.getRawAxis(KXboxRightXAxis);
     if (X > KDeadZone || X < -KDeadZone)
       return -X;
     else
@@ -314,7 +319,7 @@ public class RobotContainer {
   }
 
   public double getXboxLeftYAxis() {
-    final double Y = xbox.getRawAxis(KLeftYAxis);
+    final double Y = xbox.getRawAxis(KXboxLeftYAxis);
     if(Y > KDeadZone || Y < -KDeadZone)
       return -Y;
     else 
@@ -322,7 +327,7 @@ public class RobotContainer {
   }
 
   public double getXboxRightYAxis() {
-    final double Y = xbox.getRawAxis(KRightYAxis);
+    final double Y = xbox.getRawAxis(KXboxRightYAxis);
     if (Y > KDeadZone || Y < -KDeadZone)
       return -Y;
     else

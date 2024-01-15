@@ -38,6 +38,8 @@ public class Testbed extends SubsystemBase {
 
   private TalonSRX t1;
   private TalonSRX t2;
+  private RelativeEncoder m3_encoder;
+  private RelativeEncoder m4_encoder;
   
   // private DoubleSolenoid s1;
   // private DoubleSolenoid s2;
@@ -71,6 +73,9 @@ public class Testbed extends SubsystemBase {
     TalonSRXs[0] = t1;
     TalonSRXs[1] = t2;
 
+
+    m3_encoder = m3.getEncoder();
+    m4_encoder = m4.getEncoder();
     
     
     // s1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 4);
@@ -85,19 +90,26 @@ public class Testbed extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("vortex speed", vortex1.getEncoder().getVelocity());
+  
+    SmartDashboard.putNumber("m3 speed", m3_encoder.getVelocity());
+    SmartDashboard.putNumber("m4 speed", m4_encoder.getVelocity());
   }
 
   public void moveSpark(int canSparkMaxID, double speed) {
     sparkMaxes[canSparkMaxID].set(speed);
+    
+
   }
+
+
   public void moveTalon(int t, double speed)
   {
     TalonSRXs[t].set(ControlMode.PercentOutput, speed);
   }
-  public void moveVortex(int vortexNum, double speed) {
+  public void moveVortex(double speed) {
     vortex1.set(speed);
-    vortex2.set(speed);
+    
+    // vortex2.set(-speed);
   }
 
   // public void movepiston () {
