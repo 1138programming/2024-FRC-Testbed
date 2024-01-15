@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
 
      intakeDeployMotor = new CANSparkMax(KIntakeDeployMotorID, MotorType.kBrushless); //CHANGE DEVICE ID LATER
      //intakeDeployEncoder = new CANCoder(KIntakeDeployEncoderID);
-     intakeDeployEncoder = new RelativeEncoder(KIntakeDeployEncoderID);
+     //intakeDeployEncoder = new RelativeEncoder(KIntakeDeployEncoderID);
      intakeDeployMotor.setIdleMode(IdleMode.kBrake);
      // TalonFX motor = new TalonFX(0); 
      // intake roller, intake deploy
@@ -77,7 +77,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void intakeStop(){
-    intakeDeployMotor.set(ControlMode.PercentOutput, 0);
+  // intakeDeployMotor.set(ControlMode.PercentOutput, 0);
   }
 
   
