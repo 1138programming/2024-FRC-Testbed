@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  // Encoder
+  // intakeDeployEncoder
   public double getIntakePosition(){
     return intakeDeployEncoder.getPosition();
   }
@@ -75,20 +75,19 @@ public class Intake extends SubsystemBase {
   public boolean getBottomLimitSwitch(){
     return intakeBottomLimit.get();
   }
-
-  public void intakeStop(){
-  // intakeDeployMotor.set(ControlMode.PercentOutput, 0);
-  }
-
   
 
-  // CANSparkMax
+  // intakeDeployMotor
   public void moveIntakeUp(double speed){
     intakeDeployMotor.set(speed);
   }
 
   public void moveIntakeDown(double speed){
-    intakeDeployMotor.set(speed);
+    intakeDeployMotor.set(-speed);
+  }
+
+  public void intakeStop(double speed){
+    intakeDeployMotor.set(0);
   }
 
   public void moveIntakeUpToSpeed(){
@@ -105,7 +104,7 @@ public class Intake extends SubsystemBase {
   }
 
  
-  // TalonFX
+  // intakeSpinMotor
   // three methods: forwards, backwards, stop
   public void SpinIntakeForwards(double speed){
     // motor.set(TalonFX.PercentOutput, 0.3); 
