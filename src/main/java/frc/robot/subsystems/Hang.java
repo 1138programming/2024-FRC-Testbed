@@ -43,6 +43,7 @@ public class Hang extends SubsystemBase {
     hangEncoder = new RelativeEncoder(null, KHangEncoderPortID);
    // CANSparkMax.getEncoder(null, KHangEncoderPortID);
     //CANSparkMax.getEncoder(KHangEncoderPortID, 380);
+    //hangEncoder = CANSparkMax.getEncoder(kQuadrature, 380);
 
     hangMotor.setIdleMode(IdleMode.kBrake);
     //this.hangMotor.setInverted(hangMotorReversed);
@@ -66,24 +67,19 @@ public class Hang extends SubsystemBase {
     //}
   
 
-  public void setHangPosUp(double HangPosUp){
-    hangEncoder.setPosition(HangPosUp);
-
+  public void setHangPosUp(double HangSetpointUp){
+    hangEncoder.setPosition(HangSetpointUp);
   }
   //Create constants for set positions
-  public void setHangPosDown(double HangPosDown){
-    hangEncoder.setPosition(HangPosDown);
+  public void setHangPosDown(double HangSetpointDown){
+    hangEncoder.setPosition(HangSetpointDown);
   }
-
   public void openHang (double speed){
     hangMotor.set(speed);
-
   }
-
   public void closeHang(double speed){
     hangMotor.set(-speed);
   }
-
   public boolean getHangTopLS(){
     return hangTopLS.get();
   }

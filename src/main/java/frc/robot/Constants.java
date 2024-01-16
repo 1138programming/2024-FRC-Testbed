@@ -25,13 +25,15 @@ public final class Constants {
   public static final int KBackRightMagEncoderID = 4;
   
   // End of Sensing - CANBUS **************************************************
+  
   //Hang 
+  //Hang IDs 
   public static final int KHangEncoderID = 15;
   public static final int KHangMotorID = 14;
   public static final int KHangEncoderPortID = 16;
   public static final int KHangTopLSID = 17;
   public static final int KHangBottomLSID = 20;
-  
+  //Hang 
   
   // Motor IDs by Subsystem ------------------------------------------------------
   
