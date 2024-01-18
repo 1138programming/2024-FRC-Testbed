@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-public class Testbed extends SubsystemBase {
+public class TestBed extends SubsystemBase {
   private CANSparkMax m1;
   private CANSparkMax m2;
   private CANSparkMax m3;
@@ -38,7 +38,7 @@ public class Testbed extends SubsystemBase {
   // private DoubleSolenoid s4;
   // private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-  public Testbed() {
+  public TestBed() {
     // m1 = new CANSparkMax(1,MotorType.kBrushless);
     // m2 = new CANSparkMax(2,MotorType.kBrushless);
     // m3 = new CANSparkMax(3,MotorType.kBrushless);

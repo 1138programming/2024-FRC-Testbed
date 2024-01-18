@@ -25,7 +25,8 @@ import frc.robot.commands.Base.ToggleSpeed;
 import frc.robot.commands.Testbed.Piston;
 import frc.robot.commands.Testbed.MoveVortexWithJoystick;
 import frc.robot.subsystems.Base;
-import frc.robot.subsystems.Testbed;
+import frc.robot.subsystems.TestBed;
+import frc.robot.subsystems.Trap;
 
 
 
@@ -39,7 +40,8 @@ public class RobotContainer {
   //Subsystems
   private final Base base = new Base();
   private final Piston piston = new Piston();
-  private final Testbed testbed = new Testbed();
+  private final TestBed testbed = new TestBed();
+  private final Trap trap = new Trap();
   
   // Base
   private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);

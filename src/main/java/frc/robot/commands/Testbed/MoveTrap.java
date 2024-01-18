@@ -11,8 +11,9 @@ import frc.robot.subsystems.Trap;
 
 public class MoveTrap extends Command {
   private Trap trap;
-  public MoveTrap() {
-    this.trap = new Trap();
+  public MoveTrap(Trap trap) //this trap is in robot container.
+  {
+    this.trap = trap;
     addRequirements(trap);
   }
 
@@ -22,7 +23,10 @@ public class MoveTrap extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() 
+  {
+    trap.deposit(1);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

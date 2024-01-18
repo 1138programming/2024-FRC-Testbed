@@ -21,17 +21,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Trap extends SubsystemBase {
   /** Creates a new Trap. */
   private CANSparkMax m; //neo 550
+  private CANSparkMax wrist; //wrist
   public Trap() 
   {
     m = new CANSparkMax(kTrapMotorID, MotorType.kBrushless);
+    wrist = new CANSparkMax(kTrapWristMotorID, MotorType.kBrushless);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  public void move(int speed)
+  public void deposit(int speed)
   {
     m.set(speed);
+  }
+  public void moveWrist(int speed)
+  {
+    wrist.set(speed);
   }
 }

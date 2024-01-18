@@ -216,6 +216,7 @@ public final class Constants {
   
 //Trap
   public static final int kTrapMotorID = 1; //placeholder
+  public static final int kTrapWristMotorID = 2; //placeholder
 
   // need to find for testbed
   // public static final double ks = 0.20309;

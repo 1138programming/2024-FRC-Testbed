@@ -6,13 +6,13 @@ package frc.robot.commands.Testbed;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.Testbed;
+import frc.robot.subsystems.TestBed;
 
 public class MoveVortexWithJoystick extends Command {
-  private Testbed testbed;
+  private TestBed testbed;
 
   /** Creates a new moveVortexWithJoystick. */
-  public MoveVortexWithJoystick(Testbed testbed) {
+  public MoveVortexWithJoystick(TestBed testbed) {
     this.testbed = testbed;
     addRequirements(testbed);
   }
