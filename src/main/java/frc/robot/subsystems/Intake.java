@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkBase.getEncoder;
 
 // import for CANSparkMax
 import com.revrobotics.CANSparkMax;
@@ -14,20 +15,22 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 // import for Encoder
 import com.revrobotics.RelativeEncoder;
-import com.ctre.phoenix6.hardware.CANcoder;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.sensors.CANCoder;
+// import com.ctre.phoenix6.hardware.CANcoder;
+// import com.ctre.phoenix.motorcontrol.ControlMode;
+// import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
-// import for TalonFX
+// import for talonfx6
+import com.ctre.phoenix6.*;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 
 public class Intake extends SubsystemBase {
     
   private CANSparkMax intakeDeployMotor;
   private RelativeEncoder intakeDeployEncoder;
-  // private TalonFX intakeSpinMotor;
+  private TalonFX intakeSpinMotor;
   // check to see it is TalonFX 5 or TalonFX 6;
   private DigitalInput intakeTopLimit;
   private DigitalInput intakeBottomLimit;
@@ -38,12 +41,14 @@ public class Intake extends SubsystemBase {
   /** Creates a new intake. */
   public Intake() {
 
-     intakeDeployMotor = new CANSparkMax(KIntakeDeployMotorID, MotorType.kBrushless); //CHANGE DEVICE ID LATER
-     //intakeDeployEncoder = new CANCoder(KIntakeDeployEncoderID);
-     //intakeDeployEncoder = new RelativeEncoder(KIntakeDeployEncoderID);
+    intakeDeployMotor = new CANSparkMax(KIntakeDeployMotorID, MotorType.kBrushless); //CHANGE DEVICE ID LATER
+    intakeDeployEncoder = intakeDeployMotor.getEncoder(null, KIntakeDeployEncoderID);
+    //  intakeDeployEncoder = new RelativeEncoder(KIntakeDeployEncoderID);
      intakeDeployMotor.setIdleMode(IdleMode.kBrake);
      // TalonFX motor = new TalonFX(0); 
      // intake roller, intake deploy
+
+     intakeSpinMotor = new TalonFX(KIntakeSpinMotorID);
 
      intakeTopLimit = new DigitalInput(KIntakeTopLimitID);
      intakeBottomLimit = new DigitalInput(KIntakeBottomLimitID);
@@ -98,6 +103,10 @@ public class Intake extends SubsystemBase {
     return setVelocity;
   }
 
+  public void moveIntakeStop(){
+    intakeDeployMotor.set(0);
+  }
+
   public void setIntakeSpeed(double speed, double velocity){
     this.setSpeed = speed;
     this.setVelocity = velocity;
@@ -106,16 +115,19 @@ public class Intake extends SubsystemBase {
  
   // intakeSpinMotor
   // three methods: forwards, backwards, stop
-  public void SpinIntakeForwards(double speed){
+  public void SpinIntakeForwards(){
     // motor.set(TalonFX.PercentOutput, 0.3); 
+    intakeSpinMotor.set(100);
   }
 
-  public void spinIntakeBackwards(double speed){
+  public void spinIntakeBackwards(){
     // motor.set(TalonFX.PercentOutput, -0.3); 
+    intakeSpinMotor.set(-100);
   }
 
-  public void SpinIntakeStop(double speed){
+  public void SpinIntakeStop(){
     // motor.set(TalonFX.PercentOutput, 0);
+    intakeSpinMotor.set(0);
   }
   
 }

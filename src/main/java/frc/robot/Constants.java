@@ -30,7 +30,7 @@ public final class Constants {
   public static final int KIntakeBottomLimitID = 45;
 
   // Intake Motor
-   public static final int KIntakeDeployMotorID = 41;
+  public static final int KIntakeDeployMotorID = 41;
   public static final int KIntakeSpinMotorID = 42;
   
   
