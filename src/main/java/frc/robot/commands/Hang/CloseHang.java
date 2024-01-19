@@ -27,9 +27,7 @@ public class CloseHang extends CommandBase {
   public void execute() {
     //hang.getHangPosition(KHang)
     hang.closeHang(0.5);
-    //if(getHangPosition() < getHangBottomLS()){
-      //moveHang
-    //}
+    
   }
 
   // Called once the command ends or is interrupted.

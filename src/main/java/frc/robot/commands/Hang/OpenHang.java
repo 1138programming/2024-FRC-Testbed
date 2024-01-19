@@ -28,7 +28,6 @@ public class OpenHang extends CommandBase {
   @Override
   public void execute() {
     hang.openHang(0.5);
-    
   }
 
   // Called once the command ends or is interrupted.
