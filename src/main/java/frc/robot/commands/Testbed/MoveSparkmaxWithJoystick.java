@@ -11,11 +11,9 @@ import frc.robot.subsystems.Testbed;
 
 public class MoveSparkmaxWithJoystick extends Command {
   private Testbed testbed;
-  private int sparkNum;
   /** Creates a new MoveSparkmax. */
-  public MoveSparkmaxWithJoystick(Testbed testbed, int sparkNum) {
+  public MoveSparkmaxWithJoystick(Testbed testbed) {
     this.testbed = testbed;
-    this.sparkNum = sparkNum;
   
     addRequirements(testbed);
   }
@@ -27,18 +25,14 @@ public class MoveSparkmaxWithJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
     SmartDashboard.putNumber("Joystick", Robot.m_robotContainer.getXboxLeftYAxis());
-    
-    testbed.moveSpark(2, 0.9);
-    testbed.moveSpark(3, 0.9);
+    testbed.moveBothSparks(Robot.m_robotContainer.getLogiLeftYAxis());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    testbed.moveSpark(2, 0);
-    testbed.moveSpark(3, 0);
+    testbed.moveBothSparks(0);
   }
 
   // Returns true when the command should end.

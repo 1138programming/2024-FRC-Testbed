@@ -21,13 +21,19 @@ import frc.robot.commands.Base.BaseStop;
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
+import frc.robot.commands.FlywheelTesting.SparkMaxStop;
+import frc.robot.commands.FlywheelTesting.SpinFlywheelWithJoystick;
+import frc.robot.commands.FlywheelTesting.SpinInFlywheel;
+import frc.robot.commands.FlywheelTesting.SpinoutFlywheel;
 import frc.robot.commands.Testbed.MoveVortexWithJoystick;
 import frc.robot.commands.Testbed.MoveTalonWithJoystick;
 import frc.robot.commands.Testbed.MoveVortex;
 import frc.robot.commands.Testbed.MoveSparkmax;
 import frc.robot.commands.Testbed.MoveSparkmaxWithJoystick;
 import frc.robot.commands.Testbed.MoveTalon;
+import frc.robot.commands.Testbed.TestbedStop;
 import frc.robot.subsystems.Base;
+import frc.robot.subsystems.SparkMax;
 import frc.robot.subsystems.Testbed;
 
 
@@ -42,6 +48,7 @@ public class RobotContainer {
   //Subsystems
   private final Base base = new Base();
   private final Testbed testbed = new Testbed();
+  private final SparkMax sparkMax = new SparkMax();
   
   // Base
   private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
@@ -50,12 +57,16 @@ public class RobotContainer {
   private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
   private final BaseStop basestop = new BaseStop(base);
   // Testbed
-  // private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
-  private final MoveVortex MoveVortex = new MoveVortex(testbed);
-  private final MoveSparkmax moveSparkmax = new MoveSparkmax(testbed, 0);
-  private final MoveSparkmaxWithJoystick MoveSparkmaxWithJoystick = new MoveSparkmaxWithJoystick(testbed, 4);
+  private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
+  private final MoveVortex moveVortex = new MoveVortex(testbed);
+  private final MoveSparkmax moveSparkmax = new MoveSparkmax(testbed);
+  private final MoveSparkmaxWithJoystick moveSparkmaxWithJoystick = new MoveSparkmaxWithJoystick(testbed);
   private final MoveTalon MoveTalon = new MoveTalon(testbed, 1);
   private final MoveTalonWithJoystick MoveTalonWithJoystick = new MoveTalonWithJoystick(testbed, 1);
+  private final TestbedStop testbedStop = new TestbedStop(testbed);
+
+  private final SpinoutFlywheel spinoutFlywheel = new SpinoutFlywheel(sparkMax);
+  private final SpinInFlywheel spinInFlywheel = new SpinInFlywheel(sparkMax);
   
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
   private static final int KLogitechPort = 0;
@@ -138,8 +149,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // testbed.setDefaultCommand(moveVortexWithJoystick);
+    // testbed.setDefaultCommand(testbedStop);
     base.setDefaultCommand(basestop);
+    sparkMax.setDefaultCommand((new SpinFlywheelWithJoystick(sparkMax)));
 
     SmartDashboard.putNumber("Auton Number", 1);
 
@@ -219,11 +231,8 @@ public class RobotContainer {
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
 
-    //xboxBtnA.onTrue(MoveVortex);
-    xboxBtnA.whileTrue(MoveSparkmaxWithJoystick);
-    // logitechBtnB.onTrue(piston);
-
-
+    xboxBtnA.whileTrue(spinoutFlywheel);
+    xboxBtnB.whileTrue(spinInFlywheel);
 
     // if LB and RB are held and one is released, go back to previous speed
     if (!logitechBtnLB.getAsBoolean()) { 

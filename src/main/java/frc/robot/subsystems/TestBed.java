@@ -7,28 +7,17 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax; // Neos and 775
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Testbed extends SubsystemBase {
   private CANSparkMax m1;
   private CANSparkMax m2;
-  private CANSparkMax m3;
-  private CANSparkMax m4;
   private CANSparkMax []sparkMaxes;
   private TalonSRX []TalonSRXs;
   private CANSparkFlex []sparkFlexes;
@@ -38,8 +27,10 @@ public class Testbed extends SubsystemBase {
 
   private TalonSRX t1;
   private TalonSRX t2;
-  private RelativeEncoder m3_encoder;
-  private RelativeEncoder m4_encoder;
+  private RelativeEncoder m1_encoder;
+  private RelativeEncoder m2_encoder;
+  private RelativeEncoder v1_encoder;
+  private RelativeEncoder v2_encoder;
   
   // private DoubleSolenoid s1;
   // private DoubleSolenoid s2;
@@ -49,15 +40,11 @@ public class Testbed extends SubsystemBase {
 
   public Testbed() {
     //SparkMax
-    m1 = new CANSparkMax(KSpark1ID, MotorType.kBrushless); 
-    m2 = new CANSparkMax(KSpark2ID, MotorType.kBrushless);
-    m3 = new CANSparkMax(KSpark3ID, MotorType.kBrushless);
-    m4 = new CANSparkMax(KSpark4ID, MotorType.kBrushless);
+    m1 = new CANSparkMax(KSpark3ID, MotorType.kBrushless);
+    m2 = new CANSparkMax(KSpark4ID, MotorType.kBrushless);
     sparkMaxes = new CANSparkMax[4];
     sparkMaxes[0] = m1;
     sparkMaxes[1] = m2;
-    sparkMaxes[2] = m3;
-    sparkMaxes[3] = m4;
 
     //SparkFlex
     vortex1 = new CANSparkFlex(KVortex1ID, MotorType.kBrushless);
@@ -74,9 +61,10 @@ public class Testbed extends SubsystemBase {
     TalonSRXs[1] = t2;
 
 
-    m3_encoder = m3.getEncoder();
-    m4_encoder = m4.getEncoder();
-    
+    m1_encoder = m1.getEncoder();
+    m2_encoder = m2.getEncoder();
+    v1_encoder = vortex1.getEncoder();
+    v2_encoder = vortex2.getEncoder();
     
     // s1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 4);
     // s1.set(DoubleSolenoid.Value.kReverse);
@@ -91,26 +79,52 @@ public class Testbed extends SubsystemBase {
   @Override
   public void periodic() {
   
-    SmartDashboard.putNumber("m3 speed", m3_encoder.getVelocity());
-    SmartDashboard.putNumber("m4 speed", m4_encoder.getVelocity());
+    SmartDashboard.putNumber("vortexspeed", v1_encoder.getVelocity());
+    SmartDashboard.putNumber("m1 speed", m1_encoder.getVelocity());
+    SmartDashboard.putNumber("m2 speed", m2_encoder.getVelocity());
   }
 
-  public void moveSpark(int canSparkMaxID, double speed) {
-    sparkMaxes[canSparkMaxID].set(speed);
-    
-
+  public void moveSpark1(double speed) {
+    m1.set(speed);
+  }
+  public void moveSpark2(double speed) {
+    m2.set(speed);
+  }
+  public void moveBothSparks(double speed) {
+    m1.set(speed);
+    m2.set(speed);
   }
 
+  // public void stopSparkIfOverVolted(int MotorNum) {
+  //   sparkMaxes[MotorNum].getvol
+  // }
 
   public void moveTalon(int t, double speed)
   {
     TalonSRXs[t].set(ControlMode.PercentOutput, speed);
   }
+
   public void moveVortex(double speed) {
     vortex1.set(speed);
-    
-    // vortex2.set(-speed);
   }
+  public void setVortexVelocity(int speed) {
+    vortex1.setVoltage(speed);
+  }
+  
+  public void stopVortex() {
+    vortex1.stopMotor();
+  }
+  public void stopNeo() {
+    m1.stopMotor();
+    m2.stopMotor();
+    m1.stopMotor();
+    m2.stopMotor();
+  }
+  public void stopTalon() {
+    t1.set(ControlMode.PercentOutput, 0);
+    t2.set(ControlMode.PercentOutput, 0);
+  }
+  
 
   // public void movepiston () {
   //   System.out.println( s1.get());

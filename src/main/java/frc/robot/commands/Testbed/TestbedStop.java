@@ -18,12 +18,9 @@ public class TestbedStop extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // testbed.moveSpark(0, 0);
-    // testbed.moveSpark(1, 0);
-    // testbed.moveSpark(2, 0);
-    // testbed.moveSpark(3, 0);
-
-    // testbed.moveTalon(0, 0);
+    testbed.stopVortex();
+    testbed.stopNeo();
+    testbed.stopTalon();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
