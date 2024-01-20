@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Trap extends SubsystemBase {
   /** Creates a new Trap. */
   private CANSparkMax m; //neo 550
-  private CANSparkMax wrist; //wrist
+  private CANSparkMax wrist; // wrist
   public Trap() 
   {
     m = new CANSparkMax(kTrapMotorID, MotorType.kBrushless);
