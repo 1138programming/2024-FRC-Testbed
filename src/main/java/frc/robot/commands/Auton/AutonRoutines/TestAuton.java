@@ -17,7 +17,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestAuton extends SequentialCommandGroup {
-  Trajectory traj1 = TrajGen.generateTrajectoryFromFile(KTrajectoryJson1, KtrajectoryConfig, Robot.is_red_alliance);
+  Trajectory traj1 = TrajGen.generateTrajectoryFromFile(KTrajectoryJson1, KtrajectoryConfig);
   /** Creates a new TestAuton. */
   public TestAuton() {
     // Add your commands in the addCommands() call, e.g.

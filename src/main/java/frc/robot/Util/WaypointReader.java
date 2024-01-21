@@ -2,6 +2,8 @@ package frc.robot.Util;
 
 import edu.wpi.first.math.spline.Spline;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import static frc.robot.Constants.kFieldLength;
 
@@ -9,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 /* FROM FRC 4277 */
 
@@ -20,7 +23,8 @@ public final class WaypointReader {
      * @param pathName Specify the {THIS} in src/main/deploy/waypoints/{THIS}.path
      * @return control vectors from file
      */
-    public static TrajectoryGenerator.ControlVectorList getControlVectors(Path path, boolean isred) throws IOException {
+    public static TrajectoryGenerator.ControlVectorList getControlVectors(Path path) throws IOException {
+        boolean shouldFlipTrajectory = DriverStation.getAlliance() == Optional.of(Alliance.Red);
 
         TrajectoryGenerator.ControlVectorList controlVectors = new TrajectoryGenerator.ControlVectorList();
 
@@ -37,7 +41,7 @@ public final class WaypointReader {
                 double x = Double.parseDouble(split[0]);
                 double x_tan = Double.parseDouble(split[2]);
 
-                if (isred) {
+                if (shouldFlipTrajectory) {
                     x = kFieldLength - x;
                     x_tan = - x_tan;
                 }

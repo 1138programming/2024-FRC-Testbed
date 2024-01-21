@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 
 public final class TrajGen {
-        public static Trajectory generateTrajectoryFromFile(String file_path, TrajectoryConfig config, boolean isRed) {
+        public static Trajectory generateTrajectoryFromFile(String file_path, TrajectoryConfig config) {
         try {
             Path traj_path = Filesystem.getDeployDirectory().toPath().resolve(file_path);
-            TrajectoryGenerator.ControlVectorList control_vectors = WaypointReader.getControlVectors(traj_path, isRed);
+            TrajectoryGenerator.ControlVectorList control_vectors = WaypointReader.getControlVectors(traj_path);
             
             return TrajectoryGenerator.generateTrajectory(control_vectors, config);
         } catch (IOException ex) {
