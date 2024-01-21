@@ -4,7 +4,16 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolea
@@ -224,4 +233,20 @@ public final class Constants {
   // public static final double ks = 0.20309;
   // public static final double kv = 2.5574;
   // public static final double ka = 0.38422;
+
+
+  // public static final double kFieldLength = Units.inchesToMeters(651.25);
+  public static final double kFieldLength = Units.inchesToMeters(653.2);
+  public static final double kFieldWidth = Units.inchesToMeters(323.28);
+  // public static final double kFieldWidth = Units.inchesToMeters(315.5);
+
+  public static final String KTrajectoryJson1 = "paths/Path1.wpilib.json";
+
+  public static final TrajectoryConfig KtrajectoryConfig = new TrajectoryConfig(4.5,4);
+  
+  // try {
+  //   private static final Trajectory KPath1 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson1));
+  // } catch (IOException ex) {
+  //     DriverStation.reportError("Unable to open trajectory: " + t, ex.getStackTrace());
+  //  }
 }

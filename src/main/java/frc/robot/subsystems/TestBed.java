@@ -40,8 +40,8 @@ public class Testbed extends SubsystemBase {
 
   public Testbed() {
     //SparkMax
-    m1 = new CANSparkMax(KSpark3ID, MotorType.kBrushless);
-    m2 = new CANSparkMax(KSpark4ID, MotorType.kBrushless);
+    m1 = new CANSparkMax(KSpark1ID, MotorType.kBrushless);
+    m2 = new CANSparkMax(KSpark2ID, MotorType.kBrushless);
     sparkMaxes = new CANSparkMax[4];
     sparkMaxes[0] = m1;
     sparkMaxes[1] = m2;

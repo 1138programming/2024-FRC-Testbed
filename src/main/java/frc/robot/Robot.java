@@ -4,9 +4,27 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
+
+import edu.wpi.first.hal.AllianceStationID;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Util.Autoselector;
+import frc.robot.Util.Autoselector.DesiredAuton;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,6 +34,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  
+  public final SendableChooser<DesiredAuton> autonChooser = new SendableChooser<>();
+
+  public static boolean is_red_alliance = false;
+  public static boolean flip_trajectories = false;
 
   public static RobotContainer m_robotContainer;
 
@@ -27,6 +50,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+
+    autonChooser.setDefaultOption("Do Nothing", DesiredAuton.DO_NOTHING);
+    autonChooser.addOption("Test", DesiredAuton.TEST);
+    SmartDashboard.putData("AutonSelector", autonChooser);
+
+    // autonChooser.addOption("AutonSelector", DesiredAuton.DO_NOTHING);
+  
     m_robotContainer = new RobotContainer();
   }
 
@@ -51,12 +81,48 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    //   try {
+
+
+			// boolean alliance_changed = false;
+			// if (DriverStation.isDSAttached()) {
+			// 	if (DriverStation.getAlliance() == Optional.of(Alliance.Red)) {
+			// 		if (!is_red_alliance) {
+			// 			alliance_changed = true;
+			// 		} else {
+			// 			alliance_changed = false;
+			// 		}
+			// 		is_red_alliance = true;
+			// 	} else if (DriverStation.getAlliance() == Optional.of(Alliance.Blue) {
+			// 		if (is_red_alliance) {
+			// 			alliance_changed = true;
+			// 		} else {
+			// 			alliance_changed = false;
+			// 		}
+			// 		is_red_alliance = false;
+			// 	}
+			// } else {
+			// 	alliance_changed = true;
+			// }
+			// flip_trajectories = is_red_alliance;
+
+			// mAutoModeSelector.updateModeCreator(alliance_changed);
+			// Optional<AutoModeBase> autoMode = mAutoModeSelector.getAutoMode();
+			// if (autoMode.isPresent()) {
+			// 	mAutoModeExecutor.setAutoMode(autoMode.get());
+			// }
+
+		// } catch (Throwable t) {
+			// CrashTracker.logThrowableCrash(t);
+			// throw t;
+		// }
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = Autoselector.getDesiriedAuton(autonChooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

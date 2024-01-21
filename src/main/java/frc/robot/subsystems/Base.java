@@ -12,8 +12,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Util.Autoselector;
 
 public class Base extends SubsystemBase {
   private SwerveModule frontLeftModule;
@@ -31,6 +35,9 @@ public class Base extends SubsystemBase {
   private double rotSpeedFactor;
 
   private boolean defenseMode = false;
+
+  SendableChooser<Autoselector.DesiredAuton> autonSendableChooser;
+  
   
   public Base() {
     frontLeftModule = new SwerveModule(
@@ -75,11 +82,18 @@ public class Base extends SubsystemBase {
     );
     odometry = new SwerveDriveOdometry(kinematics, getHeading(), getPositions());
     
+    
     driveSpeedFactor = KBaseDriveMidPercent;
     rotSpeedFactor = KBaseRotMidPercent;
 
     SmartDashboard.putNumber("X and Y PID", 0);
+    
     SmartDashboard.putNumber("rot P", 0);
+
+    autonSendableChooser = new SendableChooser<Autoselector.DesiredAuton>();
+    autonSendableChooser.addOption("Do Nothing", Autoselector.DesiredAuton.DO_NOTHING);
+    autonSendableChooser.addOption("Do Nothing", Autoselector.DesiredAuton.TEST);
+    Shuffleboard.getTab("SmartDashboard").add("Auton Name", autonSendableChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, double maxDriveSpeedMPS) {
@@ -201,6 +215,10 @@ public class Base extends SubsystemBase {
   }
   public void setDefenseMode(boolean defenseMode) {
     this.defenseMode = defenseMode;
+  }
+
+  public Autoselector.DesiredAuton getDesiredAuton() {
+    return autonSendableChooser.getSelected();
   }
 
   @Override
