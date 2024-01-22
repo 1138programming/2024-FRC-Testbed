@@ -10,6 +10,7 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -233,6 +234,11 @@ public class RobotContainer {
 
     xboxBtnA.whileTrue(spinoutFlywheel);
     xboxBtnB.whileTrue(spinInFlywheel);
+    xboxBtnX.onTrue(testbed.movePiston1Command());
+    xboxBtnY.onTrue(testbed.movePiston2Command());
+    xboxBtnLB.onTrue(testbed.movePiston3Command());
+    xboxBtnRB.onTrue(testbed.movePiston4Command());
+    
 
     // if LB and RB are held and one is released, go back to previous speed
     if (!logitechBtnLB.getAsBoolean()) { 

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
@@ -13,6 +14,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Testbed extends SubsystemBase {
@@ -32,16 +37,16 @@ public class Testbed extends SubsystemBase {
   private RelativeEncoder v1_encoder;
   private RelativeEncoder v2_encoder;
   
-  // private DoubleSolenoid s1;
-  // private DoubleSolenoid s2;
-  // private DoubleSolenoid s3;
-  // private DoubleSolenoid s4;
-  // private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+  private DoubleSolenoid s1;
+  private DoubleSolenoid s2;
+  private DoubleSolenoid s3;
+  private DoubleSolenoid s4;
+  private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
   public Testbed() {
     //SparkMax
-    m1 = new CANSparkMax(KSpark3ID, MotorType.kBrushless);
-    m2 = new CANSparkMax(KSpark4ID, MotorType.kBrushless);
+    m1 = new CANSparkMax(KSpark1ID, MotorType.kBrushless);
+    m2 = new CANSparkMax(KSpark2ID, MotorType.kBrushless);
     sparkMaxes = new CANSparkMax[4];
     sparkMaxes[0] = m1;
     sparkMaxes[1] = m2;
@@ -66,14 +71,14 @@ public class Testbed extends SubsystemBase {
     v1_encoder = vortex1.getEncoder();
     v2_encoder = vortex2.getEncoder();
     
-    // s1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 4);
-    // s1.set(DoubleSolenoid.Value.kReverse);
-    // s2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 5);
-    // s2.set(DoubleSolenoid.Value.kReverse);
-    // s3 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 6);
-    // s3.set(DoubleSolenoid.Value.kReverse);
-    // s4 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 7);
-    // s4.set(DoubleSolenoid.Value.kOff);
+    s1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 4);
+    s1.set(DoubleSolenoid.Value.kReverse);
+    s2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 5);
+    s2.set(DoubleSolenoid.Value.kReverse);
+    s3 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 6);
+    s3.set(DoubleSolenoid.Value.kReverse);
+    s4 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 7);
+    s4.set(DoubleSolenoid.Value.kReverse);
   }
 
   @Override
@@ -125,10 +130,56 @@ public class Testbed extends SubsystemBase {
     t2.set(ControlMode.PercentOutput, 0);
   }
   
+  public Command moveAllPistonsCommand() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          // movepiston();
+          s1.toggle();
+          s2.toggle();
+          s3.toggle();
+          s4.toggle();
+        });
+  }
+  public Command movePiston1Command() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          // movepiston();
+          s1.toggle();
+        });
+  }
+  public Command movePiston2Command() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          s2.toggle();
+        });
+  }
+  public Command movePiston3Command() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          s3.toggle();
+        });
+  }
+  public Command movePiston4Command() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          s4.toggle();
+        });
+  }
 
-  // public void movepiston () {
-  //   System.out.println( s1.get());
-  //   s1.toggle();
-  // }
+
+  public void movepiston () {
+    System.out.println( s1.get());
+    s1.toggle();
+  }
   
 }
