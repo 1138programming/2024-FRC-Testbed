@@ -7,11 +7,13 @@ package frc.robot.commands.FlywheelTesting;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SparkMax;
 
-public class SpinoutFlywheel extends Command {
+public class MoveSparkMaxes extends Command {
   private final SparkMax sparkMax;
+  private double speed;
   /** Creates a new SpinoutFlywheel. */
-  public SpinoutFlywheel(SparkMax sparkMax) {
+  public MoveSparkMaxes(SparkMax sparkMax, double speed) {
     this.sparkMax = sparkMax;
+    this.speed = speed;
     addRequirements(sparkMax);
   }
 
@@ -22,7 +24,7 @@ public class SpinoutFlywheel extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sparkMax.moveBothMotors(0.9, 0.8); // top
+    sparkMax.moveBothMotors(speed);
   }
 
   // Called once the command ends or is interrupted.

@@ -22,6 +22,7 @@ import frc.robot.commands.Base.BaseStop;
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
+import frc.robot.commands.FlywheelTesting.MoveSparkMaxes;
 import frc.robot.commands.FlywheelTesting.SparkMaxStop;
 import frc.robot.commands.FlywheelTesting.SpinFlywheelWithJoystick;
 import frc.robot.commands.FlywheelTesting.SpinInFlywheel;
@@ -72,7 +73,7 @@ public class RobotContainer {
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
   private static final int KLogitechPort = 0;
   private static final int KXboxPort = 1;  
-  private static final int KStreamDeckPort = 2;
+  private static final int KCompStreamDeckPort = 2;
   private static final int KTestingStreamDeckPort = 3;
   private static final int KTuningStreamDeckPort = 4;
 
@@ -161,7 +162,7 @@ public class RobotContainer {
     //Game controllers
     logitech = new Joystick(KLogitechPort); //Logitech Dual Action
     xbox = new XboxController(KXboxPort);   //Xbox 360 for Windows
-    compStreamDeck = new Joystick(KStreamDeckPort);   //Stream Deck + vjoy
+    compStreamDeck = new Joystick(KCompStreamDeckPort);   //Stream Deck + vjoy
     testStreamDeck = new Joystick(KTestingStreamDeckPort);   //Stream Deck + vjoy
     tuningStreamDeck = new Joystick(KTuningStreamDeckPort);   //Stream Deck + vjoy
 
@@ -231,6 +232,19 @@ public class RobotContainer {
   private void configureButtonBindings() {
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
+
+    comp1.whileTrue(new MoveSparkMaxes(sparkMax, 1));
+    comp2.whileTrue(new MoveSparkMaxes(sparkMax, 0.9));
+    comp3.whileTrue(new MoveSparkMaxes(sparkMax, 0.8));
+    comp4.whileTrue(new MoveSparkMaxes(sparkMax, 0.5));
+    comp5.whileTrue(new MoveSparkMaxes(sparkMax, 0.25));
+    comp6.whileTrue(new MoveSparkMaxes(sparkMax, -1));
+    comp7.whileTrue(new MoveSparkMaxes(sparkMax, -0.9));
+    comp8.whileTrue(new MoveSparkMaxes(sparkMax, -0.8));
+    comp9.whileTrue(new MoveSparkMaxes(sparkMax, -0.5));
+    comp10.whileTrue(new MoveSparkMaxes(sparkMax, -0.25));
+    comp11.whileTrue(new SpinoutFlywheel(sparkMax));
+    comp12.whileTrue(new MoveSparkMaxes(sparkMax, 0.75));
 
     xboxBtnA.whileTrue(spinoutFlywheel);
     xboxBtnB.whileTrue(spinInFlywheel);

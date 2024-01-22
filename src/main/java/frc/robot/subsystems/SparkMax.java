@@ -28,6 +28,9 @@ public class SparkMax extends SubsystemBase {
 
     motor1Encoder = motor1.getEncoder();
     motor2Encoder = motor2.getEncoder();
+
+    motor1Encoder.setVelocityConversionFactor(1);
+    motor2Encoder.setVelocityConversionFactor(1);
   }
 
   public void moveMotor1(double speed) {
@@ -41,6 +44,10 @@ public class SparkMax extends SubsystemBase {
   public void moveBothMotors(double speed) {
     motor1.set(speed);
     motor2.set(speed);
+  }
+  public void moveBothMotors(double speed1, double speed2) {
+    motor1.set(speed1);
+    motor2.set(speed2);
   }
 
   @Override
