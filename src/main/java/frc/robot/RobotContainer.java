@@ -23,8 +23,13 @@ import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
 import frc.robot.subsystems.Base;
+import frc.robot.subsystems.Intake;
 
-
+// intake
+import frc.robot.commands.Intake.MoveIntakeDown;
+import frc.robot.commands.Intake.MoveIntakeUp;
+import frc.robot.commands.Intake.SpinIntakeBackwards;
+import frc.robot.commands.Intake.SpinIntakeForwards;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,16 +39,22 @@ import frc.robot.subsystems.Base;
  */
 public class RobotContainer {
   //Subsystems
-  // private final Base base = new Base();
-
+  private final Base base = new Base();
+  private final Intake intake = new Intake();
   
   
   // Base
-  // private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
-  // private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
-  // private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
-  // private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
+  private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
+  private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
+  private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
+  private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
   
+  //Intake
+  private final MoveIntakeDown moveIntakeDown = new MoveIntakeDown(intake);
+  private final MoveIntakeUp moveIntakeUp = new MoveIntakeUp(intake);
+  private final SpinIntakeBackwards spinIntakeBackwards = new SpinIntakeBackwards(intake);
+  private final SpinIntakeForwards spinIntakeForwards = new SpinIntakeForwards(intake);
+
 
   private final Piston piston = new Piston();
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
@@ -131,7 +142,7 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putNumber("Auton Number", 1);
 
-    // base.setDefaultCommand(driveWithJoysticks);
+    base.setDefaultCommand(driveWithJoysticks);
    
 
     //Game controllers
@@ -205,6 +216,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    
     // logitechBtnLB.onTrue(toggleMaxSpeed);
     // logitechBtnRB.onTrue(toggleLowSpeed);
     //logitechBtnB.toggleOnTrue(piston);

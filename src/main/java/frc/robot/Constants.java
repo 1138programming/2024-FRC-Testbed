@@ -25,13 +25,13 @@ public final class Constants {
   public static final int KBackRightMagEncoderID = 4;
 
   // Intake Encoder
-  public static final int KIntakeDeployEncoderID = 43;
-  public static final int KIntakeTopLimitID = 44;
-  public static final int KIntakeBottomLimitID = 45;
+  public static final int KIntakeDeployEncoderID = 14;
+  public static final int KIntakeTopLimitID = 15;
+  public static final int KIntakeBottomLimitID = 16;
 
   // Intake Motor
-  public static final int KIntakeDeployMotorID = 41;
-  public static final int KIntakeSpinMotorID = 42;
+  public static final int KIntakeDeployMotorID = 12;
+  public static final int KIntakeSpinMotorID = 13;
   
   
   // End of Sensing - CANBUS **************************************************
@@ -59,6 +59,7 @@ public final class Constants {
   public static final int KAngleMotorCurrentLimit = 30;
   
   // Subsystem Constants -----------------------------------------------------
+  public static final int KIntakeSpinMotorSpeed = 17;
 
   // Swerve Modules
   public static final double KAngleP = 0.006;

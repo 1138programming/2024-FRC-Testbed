@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkBase.getEncoder;
+// import com.revrobotics.CANSparkBase.getEncoder;
 
 // import for CANSparkMax
 import com.revrobotics.CANSparkMax;
@@ -35,14 +35,12 @@ public class Intake extends SubsystemBase {
   private DigitalInput intakeTopLimit;
   private DigitalInput intakeBottomLimit;
 
-  private double setSpeed;
-  private double setVelocity;
-
   /** Creates a new intake. */
   public Intake() {
 
     intakeDeployMotor = new CANSparkMax(KIntakeDeployMotorID, MotorType.kBrushless); //CHANGE DEVICE ID LATER
-    intakeDeployEncoder = intakeDeployMotor.getEncoder(null, KIntakeDeployEncoderID);
+    intakeDeployEncoder = intakeDeployMotor.getEncoder();
+
     //  intakeDeployEncoder = new RelativeEncoder(KIntakeDeployEncoderID);
      intakeDeployMotor.setIdleMode(IdleMode.kBrake);
      // TalonFX motor = new TalonFX(0); 
@@ -81,52 +79,23 @@ public class Intake extends SubsystemBase {
     return intakeBottomLimit.get();
   }
   
-
-  // intakeDeployMotor
-  public void moveIntakeUp(double speed){
+  public void moveIntake(double speed){
     intakeDeployMotor.set(speed);
   }
-
-  public void moveIntakeDown(double speed){
-    intakeDeployMotor.set(-speed);
-  }
-
-  public void intakeStop(double speed){
+  
+  public void intakeStop(){
     intakeDeployMotor.set(0);
-  }
-
-  public void moveIntakeUpToSpeed(){
-    intakeDeployMotor.set(setSpeed);
-  }
-
-  public double getTargetVelocity(){
-    return setVelocity;
-  }
-
-  public void moveIntakeStop(){
-    intakeDeployMotor.set(0);
-  }
-
-  public void setIntakeSpeed(double speed, double velocity){
-    this.setSpeed = speed;
-    this.setVelocity = velocity;
+    intakeSpinMotor.set(0);
   }
 
  
   // intakeSpinMotor
   // three methods: forwards, backwards, stop
-  public void SpinIntakeForwards(){
-    // motor.set(TalonFX.PercentOutput, 0.3); 
-    intakeSpinMotor.set(100);
+  public void spinIntake(double speed){
+    intakeSpinMotor.set(speed);
   }
 
-  public void spinIntakeBackwards(){
-    // motor.set(TalonFX.PercentOutput, -0.3); 
-    intakeSpinMotor.set(-100);
-  }
-
-  public void SpinIntakeStop(){
-    // motor.set(TalonFX.PercentOutput, 0);
+  public void spinIntakeStop(){
     intakeSpinMotor.set(0);
   }
   

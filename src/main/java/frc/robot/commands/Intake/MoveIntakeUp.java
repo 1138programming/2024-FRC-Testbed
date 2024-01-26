@@ -7,7 +7,7 @@ package frc.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.Constants.*;
+import static frc.robot.Constants.*;
 import frc.robot.subsystems.Intake;
 
 public class MoveIntakeUp extends CommandBase {
@@ -30,14 +30,16 @@ public class MoveIntakeUp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.moveIntakeUp(0.5);
-
+    // intake.moveIntakeUp(0.5);
+    intake.moveIntake(-1);
+    intake.spinIntake(KIntakeSpinMotorSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.moveIntakeStop();
+    // intake.moveIntakeStop();
+    intake.intakeStop();
   }
 
   // Returns true when the command should end.
