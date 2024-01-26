@@ -11,9 +11,11 @@ import frc.robot.Constants;
 public class CloseHang extends CommandBase {
   /** Creates a new ShortenHang. */
   public Hang hang;
-  
-  public CloseHang(Hang hang) {
+  private double speed;
+
+  public CloseHang(Hang hang, double speed) {
     this.hang = hang;
+    this.speed = speed;
     addRequirements(hang);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,14 +28,14 @@ public class CloseHang extends CommandBase {
   @Override
   public void execute() {
     //hang.getHangPosition(KHang)
-    hang.closeHang(0.5);
+    hang.moveHang(speed);
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hang.hangStop(0);
+    hang.hangStop();
     //hang.setHangPosDown(null);
     
   }

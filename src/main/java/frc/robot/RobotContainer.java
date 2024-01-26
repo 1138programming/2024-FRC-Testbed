@@ -22,7 +22,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
+import frc.robot.commands.Hang.CloseHang;
+import frc.robot.commands.Hang.OpenHang;
+import frc.robot.commands.Hang.SpinHangToPosUp;
+import frc.robot.commands.Hang.SpinHangToPosDown;
 import frc.robot.subsystems.Base;
+import frc.robot.subsystems.Hang;
 
 
 
@@ -34,8 +39,9 @@ import frc.robot.subsystems.Base;
  */
 public class RobotContainer {
   //Subsystems
-  // private final Base base = new Base();
-
+  private final Base base = new Base();
+  private final Piston piston = new Piston();
+  private final Hang hang = new Hang();
   
   
   // Base
@@ -44,8 +50,14 @@ public class RobotContainer {
   // private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
   // private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
   
+  // Hang
+  private final OpenHang openHang = new OpenHang(hang, 0);
+  private final CloseHang closeHang = new CloseHang(hang, 0);
+  private final SpinHangToPosUp spinHangToPosUp = new SpinHangToPosUp(hang, 0);
+  private final SpinHangToPosDown spinHangToPosDown = new SpinHangToPosDown(hang, 0);
 
-  private final Piston piston = new Piston();
+
+  
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
   private static final int KLogitechPort = 0;
   private static final int KXboxPort = 1;  

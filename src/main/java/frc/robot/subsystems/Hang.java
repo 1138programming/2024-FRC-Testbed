@@ -8,14 +8,13 @@ import frc.robot.Constants;
 //import static frc.robot.Constants.kHangEncoderValue;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 //import com.ctre.phoenix.sensors.CANCoder;
 //import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import static frc.robot.Constants.KHangBottomLS;
-import static frc.robot.Constants.KHangEncoderPortID;
+import static frc.robot.Constants.KHangMotorID;
 import static frc.robot.Constants.KHangTopLS;
 
 //import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -28,22 +27,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Hang extends SubsystemBase {
-  /** Creates a new Hang. */
   //Hang Motor
   private CANSparkMax hangMotor;
-  //Hang Encoder
-  private RelativeEncoder hangEncoder;
   // Hang Limit Switchs
   private DigitalInput hangTopLS;
   private DigitalInput hangBottomLS;
   
-  public Hang(int hangMotorID, boolean hangMotorReversed) {
+  public Hang() {
     //Motor
-    hangMotor = new CANSparkMax(hangMotorID, MotorType.kBrushless);
-    //hangEncoder = new RelativeEncoder(null, KHangEncoderPortID);
-    hangMotor.setIdleMode(IdleMode.kBrake);
-    //this.hangMotor.setInverted(hangMotorReversed);
-    // only use if necessary 
+    hangMotor = new CANSparkMax(KHangMotorID, MotorType.kBrushless);
+
     hangTopLS = new DigitalInput(KHangTopLS);
     hangBottomLS = new DigitalInput(KHangBottomLS);
     }
@@ -56,40 +49,35 @@ public class Hang extends SubsystemBase {
   
 
   public double getHangPosition(){
-    return hangEncoder.getPosition();
+    return hangMotor.getEncoder().getPosition();
   }
   //Do I need these two??
-   public void setHangPosUp(double HangSetpointUp){
-    hangEncoder.setPosition(HangSetpointUp);
+   public void setHangPosUp(){
+    while (hangMotor.getEncoder().getPosition() <= 0 && !getHangTopLS()){
+      hangMotor.getEncoder().setPosition(20); 
+    }
   }
 
   //Create constants for set positions
-  public void setHangPosDown(double HangSetpointDown){
-    hangEncoder.setPosition(HangSetpointDown);
-  }
+  public void setHangPosDown(){
+    while (hangMotor.getEncoder().getPosition() >= 0 && !getHangBottomLS()){
+      hangMotor.getEncoder().setPosition(-20);
+    }  }
 
-  public void openHang (double speed){
+  public void moveHang (double speed){
     hangMotor.set(speed);
     if(speed>0){
-      if (hangTopLS.get()){
+      if (getHangTopLS()){
         hangMotor.set(0);
-      } else{
-        hangMotor.set(0.5);
+      }
+    }
+    else if(speed<0) {
+      if (getHangBottomLS()){
+        hangMotor.set(0);
       }
     }
   }
 
-  public void closeHang(double speed){
-    //ask if you need this
-    hangMotor.set(-speed);
-    if (speed < 0){
-      if (hangBottomLS.get()){
-        hangMotor.set(0);
-      } else {
-        hangMotor.set(0.5);
-      }
-    }
-  }
 
   public boolean getHangTopLS(){
     return hangTopLS.get();
@@ -100,7 +88,7 @@ public class Hang extends SubsystemBase {
   }
 
   //Limit Switches will be added later
-  public void hangStop(double speed){
+  public void hangStop(){
     hangMotor.set(0);
   }
   
