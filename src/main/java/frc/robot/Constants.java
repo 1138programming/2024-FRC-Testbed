@@ -26,7 +26,7 @@ public final class Constants {
   
   //Flywheel Encoder
   public static final int KFlywheelEncoderID = 12;
-  public static final int KFlywheelEncoderRatio = 6;
+  public static final double KFlywheelEncoderRatio = 1/6;
 
   //flywheel encoder velocity
   public static double Kslowspinvelocity = 0.6;
@@ -34,6 +34,7 @@ public final class Constants {
 
   //Flywheel Motor
   public static final int KFlyWheelMotorID = 14;
+  public static final int KFlywheelMotorIndexID = 7;
 
   //flywheel motor speed
   public static final double KFlywheelspinfast = 0.9;

@@ -36,54 +36,41 @@ private double setVelocity;
 
     flywheelCanCoder = new CANCoder(KFlywheelEncoderID);
 
+    flywheelIndexerMotor = new CANSparkFlex(KFlywheelMotorIndexID, MotorType.kBrushless);
+
     flywheelMotor.setIdleMode(IdleMode.kBrake);
   }
+  
   public double getSpinEncoder() {
     return flywheelCanCoder.getAbsolutePosition();
 }
 public double getSpinEncoderVelocity(){
   return flywheelCanCoder.getVelocity();
 }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
 
-public void SpinFlywheel(double speed){
-  flywheelMotor.set(speed);
-}
-public void spinFlywheelToSpeed(){
-  flywheelMotor.set(setSpeed);
-}
 public double getTargetVelocity(){
   return setVelocity;
 }
-public void setFlywheelSpeed(double speed, double velocity){
-  this.setSpeed = speed;
-  this.setVelocity = velocity;
-}
-
- public void SpinFlywheelIndexer(double speed){
-  flywheelIndexerMotor.set(speed);
- }
-
 public double getEncoderRaw() {
-  return flywheelCanCoder.getAbsolutePosition() * KFlywheelEncoderRatio;
+  return flywheelCanCoder.getVelocity() * KFlywheelEncoderRatio;
 }
-public void spinFlywheelToPos(double setPoint){
+
+
+public void spinFlywheel(double speed){
+  flywheelMotor.set(speed);
+}
+public void spinFlywheelIndexer(double speed){
+  flywheelIndexerMotor.set(speed);
 
 }
-public void encoder(double KFlywheelEncoder){
+public void stopFlywheel(){
+  flywheelMotor.set(0);
+  flywheelIndexerMotor.set(0);
+}
 
-  double RPMOutput = 0.0;
 
-  double rawOutput = RPMOutput * (4096/360);
-
-  // 4096 encoder counts per rev, on robotics, description
-  //dont have speed info, example CHANGE LATER!!!!
-
-  SmartDashboard.putBoolean("Flywheel Spinning", true);
-  flywheelMotor.set(rawOutput);
-
+@Override
+public void periodic() {
+  // This method will be called once per scheduler run
 }
 }

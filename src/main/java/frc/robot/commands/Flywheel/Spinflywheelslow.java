@@ -23,13 +23,12 @@ public class Spinflywheelslow extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheel.setFlywheelSpeed(KFlywheelspinslow, Kslowspinvelocity);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    flywheel.spinFlywheelToSpeed();
+    flywheel.spinFlywheel(KFlywheelspinslow);
   }
 
   // Called once the command ends or is interrupted.

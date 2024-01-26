@@ -27,13 +27,7 @@ private Flywheel flywheel;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  if (flywheel.getSpinEncoderVelocity() >= flywheel.getTargetVelocity()) {
-    flywheel.SpinFlywheelIndexer(0.9);
-  }
-  else{
-    flywheel.SpinFlywheelIndexer(0.0);
-  }
-
+   flywheel.spinFlywheelIndexer(0.9);
   }
 
   // Called once the command ends or is interrupted.

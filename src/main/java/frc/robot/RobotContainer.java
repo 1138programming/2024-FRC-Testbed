@@ -23,7 +23,13 @@ import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
 import frc.robot.subsystems.Base;
-
+import frc.robot.subsystems.Flywheel;
+import frc.robot.commands.Flywheel.FlywheelStop;
+//flywheel
+import frc.robot.commands.Flywheel.IndexFlywheel;
+import frc.robot.commands.Flywheel.SpinFlywheel;
+import frc.robot.commands.Flywheel.Spinflywheelfast;
+import frc.robot.commands.Flywheel.Spinflywheelslow;
 
 
 /**
@@ -34,16 +40,23 @@ import frc.robot.subsystems.Base;
  */
 public class RobotContainer {
   //Subsystems
-  // private final Base base = new Base();
+  private final Base base = new Base();
+  private final Flywheel flywheel = new Flywheel();
 
   
   
   // Base
-  // private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
-  // private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
-  // private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
-  // private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
+  private final DriveWithJoysticks driveWithJoysticks = new DriveWithJoysticks(base);
+  private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
+  private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
+  private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
   
+  // Flywheel
+  private final IndexFlywheel indexFlywheel = new IndexFlywheel(flywheel);
+  private final SpinFlywheel spinFlywheel = new SpinFlywheel(flywheel);
+  private final Spinflywheelfast spinflywheelfast = new Spinflywheelfast(flywheel);
+  private final Spinflywheelslow spinflywheelslow = new Spinflywheelslow(flywheel);
+  private final FlywheelStop flywheelstop = new FlywheelStop(flywheel);
 
   private final Piston piston = new Piston();
   //Controller Ports (check in Driver Station, IDs may be different for each computer)
@@ -131,8 +144,8 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putNumber("Auton Number", 1);
 
-    // base.setDefaultCommand(driveWithJoysticks);
-   
+    base.setDefaultCommand(driveWithJoysticks);
+   flywheel.setDefaultCommand(flywheelstop);
 
     //Game controllers
     logitech = new Joystick(KLogitechPort); //Logitech Dual Action
