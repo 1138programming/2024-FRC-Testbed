@@ -7,8 +7,10 @@ import javax.swing.plaf.DesktopIconUI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.commands.Auton.RunTrajectory;
 import frc.robot.commands.Auton.AutonRoutines.TestAuton;
+import frc.robot.subsystems.Base;
 
 public class Autoselector {
     public enum DesiredAuton {
@@ -16,14 +18,14 @@ public class Autoselector {
         TEST,
     }
 
-    public static Command getDesiriedAuton(DesiredAuton auton) {
+    public static Command getDesiriedAuton(DesiredAuton auton, Base base, DrivePathFollower drivePathFollower) {
         switch (auton) {
             case DO_NOTHING:
                 return null;
                 
             case TEST:
-                return new TestAuton();
-                
+                return new TestAuton(base, drivePathFollower);
+
             default:
                 return null;
                 

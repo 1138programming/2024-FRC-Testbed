@@ -35,7 +35,7 @@ import frc.robot.Util.Autoselector.DesiredAuton;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   
-  public final SendableChooser<DesiredAuton> autonChooser = new SendableChooser<>();
+  
 
   public static boolean is_red_alliance = false;
   public static boolean flip_trajectories = false;
@@ -51,9 +51,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
-    autonChooser.setDefaultOption("Do Nothing", DesiredAuton.DO_NOTHING);
-    autonChooser.addOption("Test", DesiredAuton.TEST);
-    SmartDashboard.putData("AutonSelector", autonChooser);
+    
 
     // autonChooser.addOption("AutonSelector", DesiredAuton.DO_NOTHING);
   
@@ -122,7 +120,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = Autoselector.getDesiriedAuton(autonChooser.getSelected());
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

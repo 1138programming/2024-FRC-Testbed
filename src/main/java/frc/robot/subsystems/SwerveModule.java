@@ -60,7 +60,7 @@ public class SwerveModule extends SubsystemBase {
     
     canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    canCoderConfig.MagnetSensor.MagnetOffset = offset; // CHANGE TO ROTATIONS
+    canCoderConfig.MagnetSensor.MagnetOffset = offset/360; // CHANGE TO ROTATIONS
     canCoder.getConfigurator().apply(canCoderConfig);
 
     driveEncoder = driveMotor.getEncoder();
@@ -78,6 +78,7 @@ public class SwerveModule extends SubsystemBase {
   
   
   public void setDesiredState(SwerveModuleState desiredState) {
+    // System.out.println("I DID IT");
     double angleMotorOutput;
     double driveMotorOutput;
     
@@ -86,6 +87,8 @@ public class SwerveModule extends SubsystemBase {
     angleMotorOutput = angleController.calculate(getMagDegRaw(), desiredState.angle.getDegrees());
     
     driveMotorOutput = desiredState.speedMetersPerSecond / KPhysicalMaxDriveSpeedMPS;
+
+    SmartDashboard.putNumber("driveMotorOutput " + driveMotor.getDeviceId(), driveMotorOutput);
     
     angleMotor.set(angleMotorOutput);
     driveMotor.set(driveMotorOutput);    

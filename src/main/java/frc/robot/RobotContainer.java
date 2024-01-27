@@ -20,11 +20,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Util.Autoselector;
+import frc.robot.Util.DrivePathFollower;
+import frc.robot.Util.Autoselector.DesiredAuton;
+import frc.robot.commands.Auton.AutonRoutines.TestAuton;
 import frc.robot.commands.Base.BaseStop;
 //base 
 import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
+import frc.robot.commands.Base.Resets.ResetGyro;
 import frc.robot.commands.FlywheelTesting.SparkMaxStop;
 import frc.robot.commands.FlywheelTesting.SpinFlywheelWithJoystick;
 import frc.robot.commands.FlywheelTesting.SpinInFlywheel;
@@ -50,7 +54,7 @@ import frc.robot.subsystems.Testbed;
  */
 public class RobotContainer {
   //Subsystems
-  private final Base base = new Base();
+  public final Base base = new Base();
   private final Testbed testbed = new Testbed();
   private final SparkMax sparkMax = new SparkMax();
   
@@ -59,6 +63,7 @@ public class RobotContainer {
   private final ToggleSpeed toggleMaxSpeed = new ToggleSpeed(base, KBaseDriveMaxPercent, KBaseRotMaxPercent);
   private final ToggleSpeed toggleMidSpeed = new ToggleSpeed(base, KBaseDriveMidPercent, KBaseRotMidPercent);
   private final ToggleSpeed toggleLowSpeed = new ToggleSpeed(base, KBaseDriveLowPercent, KBaseRotLowPercent);
+  private final ResetGyro resetGyro = new ResetGyro(base);
   private final BaseStop basestop = new BaseStop(base);
   // Testbed
   private final MoveVortexWithJoystick moveVortexWithJoystick = new MoveVortexWithJoystick(testbed);
@@ -149,15 +154,24 @@ public class RobotContainer {
 
   // Top Left SD = 1, numbered from left to right
   public JoystickButton streamDeck1, streamDeck2, streamDeck3, streamDeck4, streamDeck5, streamDeck6, streamDeck7, streamDeck8, streamDeck9, // Vjoy 2
-    streamDeck10, streamDeck11, streamDeck12, streamDeck13, streamDeck14, streamDeck15; 
+    streamDeck10, streamDeck11, streamDeck12, streamDeck13, streamDeck14, streamDeck15;
+    
+  private final SendableChooser<DesiredAuton> autonChooser;
+  private DrivePathFollower drivePathFollower;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    autonChooser = new SendableChooser<>();
+    drivePathFollower = new DrivePathFollower();
     // testbed.setDefaultCommand(testbedStop);
-    base.setDefaultCommand(basestop);
+    base.setDefaultCommand(driveWithJoysticks);
     sparkMax.setDefaultCommand((new SpinFlywheelWithJoystick(sparkMax)));
 
     SmartDashboard.putNumber("Auton Number", 1);
+
+    autonChooser.setDefaultOption("Do Nothing", DesiredAuton.DO_NOTHING);
+    autonChooser.addOption("Test", DesiredAuton.TEST);
+    SmartDashboard.putData("AutonSelector", autonChooser);
 
    
 
@@ -223,6 +237,8 @@ public class RobotContainer {
   	
     // Configure the button bindings
     configureButtonBindings();
+
+    
   }
 
   /**
@@ -232,6 +248,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    logitechBtnY.onTrue(resetGyro);
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
 
@@ -261,7 +278,8 @@ public class RobotContainer {
    */ 
   public Command getAutonomousCommand()
   {
-    return null;
+    // return Autoselector.getDesiriedAuton(autonChooser.getSelected(), base, drivePathFollower);
+    return new TestAuton(base, drivePathFollower);
   }
 
   public static double scaleBetween(double unscaledNum, double minAllowed, double maxAllowed, double min, double max) {

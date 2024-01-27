@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -24,6 +25,7 @@ public class Base extends SubsystemBase {
   private SwerveModule frontRightModule;
   private SwerveModule backLeftModule;
   private SwerveModule backRightModule;
+  private SwerveModule[] modules;
 
   private AHRS gyro;
 
@@ -72,6 +74,10 @@ public class Base extends SubsystemBase {
       KBackRightDriveReversed,
       KBackRightAngleReversed
     );
+    // modules[0] = frontLeftModule;
+    // modules[1] = frontRightModule;
+    // modules[2] = backLeftModule;
+    // modules[3] = backRightModule;
 
     gyro = new AHRS(SPI.Port.kMXP);
     gyro.reset();
@@ -103,22 +109,54 @@ public class Base extends SubsystemBase {
     
     //feeding parameter speeds into toSwerveModuleStates to get an array of SwerveModuleState objects
     SwerveModuleState[] states =
-      kinematics.toSwerveModuleStates(
-        fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading())
-          : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, KPhysicalMaxDriveSpeedMPS);
-
-    if (defenseMode) {
-      lockWheels();
-    }
+    kinematics.toSwerveModuleStates(
+      fieldRelative
+      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading())
+      : new ChassisSpeeds(xSpeed, ySpeed, rot));
+      SwerveDriveKinematics.desaturateWheelSpeeds(states, KPhysicalMaxDriveSpeedMPS);
+      
+      // for (int i = 0; i < states.length; i++) {
+        //   modules[i].setDesiredState(states[i]);
+        // }
+        
+        // SmartDashboard.putString("1", ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading()).toString());
+        
+        SmartDashboard.putString("1", ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading()).toString());
+        if (defenseMode) {
+          lockWheels();
+        }
     else {
+      SmartDashboard.putNumber("frontLeftState", states[0].speedMetersPerSecond);
+      SmartDashboard.putNumber("frontRightState", states[1].speedMetersPerSecond);
+      SmartDashboard.putNumber("backLeftState", states[2].speedMetersPerSecond);
+      SmartDashboard.putNumber("backRightState", states[3].speedMetersPerSecond);
       //setting module states, aka moving the motors
       frontLeftModule.setDesiredState(states[0]);
       frontRightModule.setDesiredState(states[1]);
       backLeftModule.setDesiredState(states[2]);
       backRightModule.setDesiredState(states[3]);
     }
+  }
+
+  public void driveAuton(ChassisSpeeds chassisSpeeds) {
+    SmartDashboard.putString("1", chassisSpeeds.toString());
+    //feeding parameter speeds into toSwerveModuleStates to get an array of SwerveModuleState objects
+    SwerveModuleState[] states =
+      kinematics.toSwerveModuleStates(chassisSpeeds);
+    // SwerveDriveKinematics.desaturateWheelSpeeds(states, KPhysicalMaxDriveSpeedMPS);
+    
+    //setting module states, aka moving the motors
+    SmartDashboard.putNumber("frontLeftState", states[0].speedMetersPerSecond);
+    SmartDashboard.putNumber("frontRightState", states[1].speedMetersPerSecond);
+    SmartDashboard.putNumber("backLeftState", states[2].speedMetersPerSecond);
+    SmartDashboard.putNumber("backRightState", states[3].speedMetersPerSecond);
+
+    // System.out.println("SOJAODISJODIAJSOIDJASOIJASOIJDOASIJ");
+    System.out.println(Timer.getFPGATimestamp());
+    frontLeftModule.setDesiredState(states[0]);
+    frontRightModule.setDesiredState(states[1]);
+    backLeftModule.setDesiredState(states[2]);
+    backRightModule.setDesiredState(states[3]);
   }
 
   public void lockWheels() {
@@ -149,7 +187,7 @@ public class Base extends SubsystemBase {
   // recalibrates gyro offset
   public void resetGyro() {
     gyro.reset(); 
-    gyro.setAngleAdjustment(0);
+    // gyro.setAngleAdjustment(0);
   }
 
   public void resetGyro(double gyroOffset) {
@@ -174,6 +212,10 @@ public class Base extends SubsystemBase {
 
     return positions;
   }
+
+  public SwerveDriveKinematics getKinematics() {
+    return kinematics;
+  }
   
   public void resetOdometry() {
     resetAllRelEncoders();
@@ -187,6 +229,7 @@ public class Base extends SubsystemBase {
   }
   public double getHeadingDeg() {
     return -gyro.getAngle();
+    // return -gyro.getFusedHeading();
   }
 
   public double getRoll() {
@@ -223,7 +266,8 @@ public class Base extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Gyro", getHeadingDeg());
+    SmartDashboard.putNumber("Fused Heading", gyro.getFusedHeading());
+    SmartDashboard.putNumber("Heading", -gyro.getAngle());
     SmartDashboard.putString("odometry pose", odometry.getPoseMeters().toString());
     SmartDashboard.putNumber("BackLeftCanCoderPos", backLeftModule.getMagDegRaw());
     SmartDashboard.putNumber("FrontLeftCanCoderPos", frontLeftModule.getMagDegRaw());

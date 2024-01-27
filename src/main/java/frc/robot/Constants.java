@@ -7,10 +7,14 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -97,6 +101,7 @@ public final class Constants {
   public static final double KAngleGearRatio = 21.42857; // 150/7 : 1
   
   public static final double KPhysicalMaxDriveSpeedMPS = KNeoMaxRPM * KDriveMotorRPMToMetersPerSec;
+  public static final double KMaxAcceleration = 4;
 
   // find for testbed
   public static final double KMaxAngularSpeed = 3.5; 
@@ -113,12 +118,22 @@ public final class Constants {
   // Offsets for absolute encoders, used to set up angle encoders
 
   // double check
-  public static final double KBackLeftOffset = -0.0810546875; //-29.1796875 deg
-  public static final double KBackRightOffset = -0.0627441389; //-22.587890 deg 
-  public static final double KFrontLeftOffset = -0.90045464122; //-315.263671 deg
+  public static final double KFrontLeftOffset = -12.44;
+  public static final double KFrontRightOffset = 311.81;  
+  public static final double KBackLeftOffset =  332.5;
+  public static final double KBackRightOffset = -17.75;
+  // public static final double KFrontLeftOffset = -171.56;
+  // public static final double KFrontRightOffset = 99.31;  
+  // public static final double KBackLeftOffset =  152.5;
+  // public static final double KBackRightOffset = -17.75;
+
+
+  // public static final double KFrontLeftOffset = -0.90045464122; //-315.263671 deg
+  // public static final double KFrontRightOffset = -0.21484375; //-77.34375 
+  // public static final double KBackLeftOffset = -0.0810546875; //-29.1796875 deg
+  // public static final double KBackRightOffset = -0.0627441389; //-22.587890 deg 
   // public static final double KFrontLeftOffset = -0.875732419; //-315.263671 deg
   // 0.02472222222 
-  public static final double KFrontRightOffset = -0.21484375; //-77.34375 
   
     // Describes the locations of the swerve modules relative to the center of the robot
   // Important for kinematics
@@ -214,20 +229,33 @@ public final class Constants {
   public static final double KTapeLimelightMoveI = 0;
   public static final double KTapeLimelightMoveD = 0;
   
-  public static final double KXControllerP = 1;
-  public static final double KXControllerI = 0;
-  public static final double KXControllerD = 0;
+  public static final double KForwardControllerP = 1;
+  public static final double KForwardControllerI = 0;
+  public static final double KForwardControllerD = 0;
+
+  public static final double KStrafeControllerP = 1;
+  public static final double KStrafeControllerI = 0;
+  public static final double KStrafeControllerD = 0;
   
-  public static final double KYControllerP = 1;
-  public static final double KYControllerI = 0;
-  public static final double KYControllerD = 0;
-  
-  public static final double KRotControllerP = 1;
+  public static final double KRotControllerP = 0;
   public static final double KRotControllerI = 0;
   public static final double KRotControllerD = 0;
+
+  public static final double KRotMaxVelocity = 2 * Math.PI;
+  public static final double KRotMaxAcceleration = 2 * Math.PI * KRotMaxVelocity;
+
+  public static final TrapezoidProfile.Constraints KRotControllerConstraints = new TrapezoidProfile.Constraints(
+                                KRotMaxVelocity, KRotMaxAcceleration);
+
+  public static final PIDController KForwardController = new PIDController(KForwardControllerP, KForwardControllerI, KForwardControllerD);
+  public static final PIDController KStrafeController = new PIDController(KStrafeControllerP, KStrafeControllerI, KStrafeControllerD);
+  public static final ProfiledPIDController KRotationController = new ProfiledPIDController(KRotControllerP, KRotControllerI, KRotControllerD, KRotControllerConstraints);
+  public static final HolonomicDriveController KDriveController = new HolonomicDriveController(KForwardController, KStrafeController, KRotationController);
+
+
+  // public static final double KRotMaxVelocity = Math.PI;
+  // public static final double KRotMaxAcceleration = Math.PI * KRotMaxVelocity;
   
-  public static final double KRotMaxVelocity = 6.28;
-  public static final double KRotMaxAcceleration = 3.14;
   
   // need to find for testbed
   // public static final double ks = 0.20309;
@@ -240,9 +268,9 @@ public final class Constants {
   public static final double kFieldWidth = Units.inchesToMeters(323.28);
   // public static final double kFieldWidth = Units.inchesToMeters(315.5);
 
-  public static final String KTrajectoryJson1 = "paths/Path1.wpilib.json";
+  public static final String KTrajectoryJson1 = "paths/StraightLine.wpilib.json";
 
-  public static final TrajectoryConfig KtrajectoryConfig = new TrajectoryConfig(4.5,4);
+  public static final TrajectoryConfig KtrajectoryConfig = new TrajectoryConfig(KPhysicalMaxDriveSpeedMPS,KMaxAcceleration);
   
   // try {
   //   private static final Trajectory KPath1 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson1));
