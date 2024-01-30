@@ -20,7 +20,7 @@ public class MoveVortex extends Command {
   @Override
   public void execute() {
     // testbed.moveVortex(0.9);
-    testbed.moveVortex(0.5);
+    testbed.moveVortex(1);
   }
 
   // Called once the command ends or is interrupted.

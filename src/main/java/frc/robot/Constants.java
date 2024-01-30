@@ -65,8 +65,8 @@ public final class Constants {
   public static final int KSpark3ID = 13;
   public static final int KSpark4ID = 14;
 
-  public static final int KVortex1ID = 15;
-  public static final int KVortex2ID = 16;
+  public static final int KVortex1ID = 18;
+  public static final int KVortex2ID = 15;
   
   // End of Motor Section *****************************************************
   
@@ -118,14 +118,14 @@ public final class Constants {
   // Offsets for absolute encoders, used to set up angle encoders
 
   // double check
-  public static final double KFrontLeftOffset = -12.44;
-  public static final double KFrontRightOffset = 311.81;  
-  public static final double KBackLeftOffset =  332.5;
-  public static final double KBackRightOffset = -17.75;
-  // public static final double KFrontLeftOffset = -171.56;
-  // public static final double KFrontRightOffset = 99.31;  
-  // public static final double KBackLeftOffset =  152.5;
-  // public static final double KBackRightOffset = -17.75;
+  public static final double KFrontLeftOffset = 82;
+  public static final double KFrontRightOffset = -33.48;  
+  public static final double KBackLeftOffset =  -22.23;
+  public static final double KBackRightOffset = -8.701;
+  // public static final double KFrontLeftOffset = 0;
+  // public static final double KFrontRightOffset = 0;  
+  // public static final double KBackLeftOffset =  0;
+  // public static final double KBackRightOffset = 0;
 
 
   // public static final double KFrontLeftOffset = -0.90045464122; //-315.263671 deg
@@ -268,7 +268,9 @@ public final class Constants {
   public static final double kFieldWidth = Units.inchesToMeters(323.28);
   // public static final double kFieldWidth = Units.inchesToMeters(315.5);
 
-  public static final String KTrajectoryJson1 = "paths/StraightLine.wpilib.json";
+  public static final String KTrajectoryJson1 = "paths/Path1.wpilib.json";
+  public static final String KTrajectoryJson2 = "paths/Path2.wpilib.json";
+  public static final String KTrajectoryJson3 = "paths/Path3.wpilib.json";
 
   public static final TrajectoryConfig KtrajectoryConfig = new TrajectoryConfig(KPhysicalMaxDriveSpeedMPS,KMaxAcceleration);
   
@@ -278,3 +280,4 @@ public final class Constants {
   //     DriverStation.reportError("Unable to open trajectory: " + t, ex.getStackTrace());
   //  }
 }
+

@@ -8,12 +8,15 @@ import static frc.robot.Constants.KDriveController;
 import static frc.robot.Constants.KMaxAcceleration;
 import static frc.robot.Constants.KPhysicalMaxDriveSpeedMPS;
 import static frc.robot.Constants.KTrajectoryJson1;
+import static frc.robot.Constants.KTrajectoryJson2;
+import static frc.robot.Constants.KTrajectoryJson3;
 import static frc.robot.Constants.KtrajectoryConfig;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Robot;
@@ -31,29 +34,47 @@ import edu.wpi.first.wpilibj.Filesystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestAuton extends SequentialCommandGroup {
-  Trajectory trajectory = new Trajectory();
-  SwerveControllerCommand swerveControllerCommand;
+  Trajectory trajectory1 = new Trajectory();
+  Trajectory trajectory2 = new Trajectory();
+  Trajectory trajectory3 = new Trajectory();
+  SwerveControllerCommand path1follow;
+  SwerveControllerCommand path2follow;
+  SwerveControllerCommand path3follow;
 
   /** Creates a new TestAuton. */
   public TestAuton(Base base, DrivePathFollower drivePathFollower) {
     try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson1);
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson1);
+      trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
+      Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson2);
+      trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
+      Path trajectoryPath3 = Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson3);
+      trajectory3 = TrajectoryUtil.fromPathweaverJson(trajectoryPath3);
     }
     catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + KTrajectoryJson1, ex.getStackTrace());
     }
 
-    base.resetOdometry(trajectory.getInitialPose());
+    base.resetOdometry(trajectory1.getInitialPose());
     base.resetGyro();
 
-    swerveControllerCommand = new SwerveControllerCommand(
-      trajectory, base::getPose, base.getKinematics(), KDriveController, base::setModuleStates, base);
-    // Add your commands in the addCommands() call, e.g.
+    path1follow = new SwerveControllerCommand(
+      trajectory1, base::getPose, base.getKinematics(), KDriveController, base::setModuleStates, base);
+
+    path2follow = new SwerveControllerCommand(
+      trajectory2, base::getPose, base.getKinematics(), KDriveController, base::setModuleStates, base);
+     
+    path3follow = new SwerveControllerCommand(
+      trajectory3, base::getPose, base.getKinematics(), KDriveController, base::setModuleStates, base);
+    
+      // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       // new RunTrajectory(base, trajectory, drivePathFollower)
-      swerveControllerCommand
+      path1follow,
+      new RunCommand(() -> base.resetOdometry(trajectory2.getInitialPose()), base),
+      path2follow
+      // path3follow
     );
   }
 }
