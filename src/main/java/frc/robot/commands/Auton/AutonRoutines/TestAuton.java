@@ -55,7 +55,7 @@ public class TestAuton extends SequentialCommandGroup {
       DriverStation.reportError("Unable to open trajectory: " + KTrajectoryJson1, ex.getStackTrace());
     }
 
-    base.resetOdometry(trajectory1.getInitialPose());
+    base.resetPose(trajectory1.getInitialPose());
     base.resetGyro();
 
     path1follow = new SwerveControllerCommand(
@@ -72,7 +72,7 @@ public class TestAuton extends SequentialCommandGroup {
     addCommands(
       // new RunTrajectory(base, trajectory, drivePathFollower)
       path1follow,
-      new RunCommand(() -> base.resetOdometry(trajectory2.getInitialPose()), base),
+      new RunCommand(() -> base.resetPose(trajectory2.getInitialPose()), base),
       path2follow
       // path3follow
     );

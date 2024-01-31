@@ -7,6 +7,12 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -150,6 +156,7 @@ public final class Constants {
   public static final Translation2d KBackRightLocation = new Translation2d(
     -KWheelDistanceFromCenter, -KWheelDistanceFromCenter
   );
+  public static final double KWheelRadialDistanceFromCenter = 0.43105;
 
     // Setting up which motors are reversed
   public static final boolean KFrontLeftDriveReversed = false;
@@ -273,6 +280,18 @@ public final class Constants {
   public static final String KTrajectoryJson3 = "paths/Path3.wpilib.json";
 
   public static final TrajectoryConfig KtrajectoryConfig = new TrajectoryConfig(KPhysicalMaxDriveSpeedMPS,KMaxAcceleration);
+
+  public static final HolonomicPathFollowerConfig KPathFollowerConfig = new HolonomicPathFollowerConfig(
+      new PIDConstants(5.0, 0, 0), // Translation constants 
+      new PIDConstants(5.0, 0, 0), // Rotation constants 
+      KPhysicalMaxDriveSpeedMPS, 
+      KWheelRadialDistanceFromCenter, // Drive base radius (distance from center to furthest module) 
+      new ReplanningConfig()
+    );
+  
+  // public static final PathConstraints KPathPlannerConstraints = 
+  //   new PathConstraints(4, 3, 1, 1);
+
   
   // try {
   //   private static final Trajectory KPath1 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(KTrajectoryJson1));

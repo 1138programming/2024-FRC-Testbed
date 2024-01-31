@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Util.Autoselector;
 
 public class Base extends SubsystemBase {
@@ -94,6 +97,27 @@ public class Base extends SubsystemBase {
     autonSendableChooser.addOption("Do Nothing", Autoselector.DesiredAuton.DO_NOTHING);
     autonSendableChooser.addOption("Do Nothing", Autoselector.DesiredAuton.TEST);
     Shuffleboard.getTab("SmartDashboard").add("Auton Name", autonSendableChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+
+    AutoBuilder.configureHolonomic(
+      this::getPose, 
+      this::resetPose, 
+      this::getSpeeds, 
+      this::driveRobotRelative,
+      KPathFollowerConfig 
+      ,
+      () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+      },
+      this
+    );
   }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, double maxDriveSpeedMPS) {
@@ -132,21 +156,14 @@ public class Base extends SubsystemBase {
     }
   }
 
-  public void driveAuton(ChassisSpeeds chassisSpeeds) {
-    SmartDashboard.putString("1", chassisSpeeds.toString());
-    //feeding parameter speeds into toSwerveModuleStates to get an array of SwerveModuleState objects
-    SwerveModuleState[] states =
-      kinematics.toSwerveModuleStates(chassisSpeeds);
-    // SwerveDriveKinematics.desaturateWheelSpeeds(states, KPhysicalMaxDriveSpeedMPS);
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     
-    //setting module states, aka moving the motors
-    SmartDashboard.putNumber("frontLeftState", states[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("frontRightState", states[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("backLeftState", states[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("backRightState", states[3].speedMetersPerSecond);
+    //feeding parameter speeds into toSwerveModuleStates to get an array of SwerveModuleState objects
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(targetSpeeds);
 
-    // System.out.println("SOJAODISJODIAJSOIDJASOIJASOIJDOASIJ");
-    System.out.println(Timer.getFPGATimestamp());
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, KPhysicalMaxDriveSpeedMPS);
+
     frontLeftModule.setDesiredState(states[0]);
     frontRightModule.setDesiredState(states[1]);
     backLeftModule.setDesiredState(states[2]);
@@ -159,10 +176,12 @@ public class Base extends SubsystemBase {
     backLeftModule.lockWheel();
     backRightModule.lockWheel();
   }
+
+  public ChassisSpeeds getSpeeds() {
+    return kinematics.toChassisSpeeds(getModuleStates());
+  }
   
-  public void resetOdometry(Pose2d pose) {
-    resetAllRelEncoders();
-    
+  public void resetPose(Pose2d pose) {
     odometry.resetPosition(getHeading(), getPositions(), pose);
   }
 
@@ -175,6 +194,21 @@ public class Base extends SubsystemBase {
     frontRightModule.setDesiredState(desiredStates[1]);
     backLeftModule.setDesiredState(desiredStates[2]);
     backRightModule.setDesiredState(desiredStates[3]);
+  }
+
+  public SwerveModuleState getModuleState(SwerveModule module) {
+    return new SwerveModuleState(module.getDriveEncoderVel(), module.getAngleR2D());
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+
+    states[0] = getModuleState(frontLeftModule);
+    states[1] = getModuleState(frontRightModule);
+    states[2] = getModuleState(backLeftModule);
+    states[3] = getModuleState(backRightModule);
+
+    return states;
   }
 
   // recalibrates gyro offset
@@ -209,19 +243,12 @@ public class Base extends SubsystemBase {
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
   }
-  
-  public void resetOdometry() {
-    resetAllRelEncoders();
-    
-    odometry.resetPosition(getHeading(), getPositions(), new Pose2d());
-  }
 
   public Rotation2d getHeading() {
-    return Rotation2d.fromDegrees(getHeadingDeg());
+    return Rotation2d.fromDegrees(gyro.getAngle());
   }
   public double getHeadingDeg() {
-    return -gyro.getAngle();
-    // return -gyro.getFusedHeading();
+    return gyro.getAngle();
   }
 
   public double getRoll() {

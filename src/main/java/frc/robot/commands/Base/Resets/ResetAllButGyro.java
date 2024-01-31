@@ -19,7 +19,6 @@ public class ResetAllButGyro extends Command {
   @Override
   public void initialize() {
     base.resetAllRelEncoders();
-    base.resetOdometry();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

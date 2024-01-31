@@ -33,7 +33,7 @@ public class RunTrajectoryWPILibStyle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    base.resetOdometry(trajectory.getInitialPose());
+    base.resetPose(trajectory.getInitialPose());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

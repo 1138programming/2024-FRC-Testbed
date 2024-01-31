@@ -9,9 +9,15 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -29,6 +35,7 @@ import frc.robot.commands.Base.DriveWithJoysticks;
 
 import frc.robot.commands.Base.ToggleSpeed;
 import frc.robot.commands.Base.Resets.ResetGyro;
+import frc.robot.commands.Base.Resets.ResetPose;
 import frc.robot.commands.FlywheelTesting.SparkMaxStop;
 import frc.robot.commands.FlywheelTesting.SpinFlywheelWithJoystick;
 import frc.robot.commands.FlywheelTesting.SpinInFlywheel;
@@ -156,12 +163,11 @@ public class RobotContainer {
   public JoystickButton streamDeck1, streamDeck2, streamDeck3, streamDeck4, streamDeck5, streamDeck6, streamDeck7, streamDeck8, streamDeck9, // Vjoy 2
     streamDeck10, streamDeck11, streamDeck12, streamDeck13, streamDeck14, streamDeck15;
     
-  private final SendableChooser<DesiredAuton> autonChooser;
+  private final SendableChooser<Command> autonChooser;
   private DrivePathFollower drivePathFollower;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    autonChooser = new SendableChooser<>();
     drivePathFollower = new DrivePathFollower();
     // testbed.setDefaultCommand(testbedStop);
     base.setDefaultCommand(driveWithJoysticks);
@@ -169,9 +175,12 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("Auton Number", 1);
 
-    autonChooser.setDefaultOption("Do Nothing", DesiredAuton.DO_NOTHING);
-    autonChooser.addOption("Test", DesiredAuton.TEST);
-    SmartDashboard.putData("AutonSelector", autonChooser);
+    // autonChooser.setDefaultOption("Do Nothing", DesiredAuton.DO_NOTHING);
+    // autonChooser.addOption("Test", DesiredAuton.TEST);
+    // SmartDashboard.putData("AutonSelector", autonChooser);
+
+    autonChooser = AutoBuilder.buildAutoChooser("New New Auto");
+    SmartDashboard.putData("Auton Chooser", autonChooser);
 
    
 
@@ -249,6 +258,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     logitechBtnY.onTrue(resetGyro);
+    logitechBtnA.whileTrue(new RunCommand(() -> base.resetPose(new Pose2d(5, 3, new Rotation2d()))));
+    
     // logitechBtnA.whileTrue(moveVortex);
     logitechBtnLB.onTrue(toggleMaxSpeed);
     logitechBtnRB.onTrue(toggleLowSpeed);
@@ -279,8 +290,9 @@ public class RobotContainer {
    */ 
   public Command getAutonomousCommand()
   {
-    // return Autoselector.getDesiriedAuton(autonChooser.getSelected(), base, drivePathFollower);
-    return new TestAuton(base, drivePathFollower);
+    PathPlannerPath PPPath1 = PathPlannerPath.fromPathFile("PPPath1");
+    
+    return new ResetPose(base, PPPath1.getPreviewStartingHolonomicPose()).andThen(autonChooser.getSelected());
   }
 
   public static double scaleBetween(double unscaledNum, double minAllowed, double maxAllowed, double min, double max) {

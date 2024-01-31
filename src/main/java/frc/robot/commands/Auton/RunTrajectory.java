@@ -39,7 +39,7 @@ public class RunTrajectory extends Command {
   @Override
   public void initialize() {
     DrivePathFollower.createConfig(KPhysicalMaxDriveSpeedMPS, KMaxAcceleration, 0, 0);
-    base.resetOdometry(t.getInitialPose());
+    base.resetPose(t.getInitialPose());
     drivePathFollower.setTrajectory(t, base.getHeading(), base.getPose());
   }
 
@@ -47,7 +47,7 @@ public class RunTrajectory extends Command {
   @Override
   public void execute() {
     // SmartDashboard.putString("CHASSIS SPEEDS", drivePathFollower.update(base.getPose(), Timer.getFPGATimestamp()).toString());
-    base.driveAuton(drivePathFollower.update(base.getPose(), Timer.getFPGATimestamp()));
+    base.driveRobotRelative(drivePathFollower.update(base.getPose(), Timer.getFPGATimestamp()));
   }
 
   // Called once the command ends or is interrupted.

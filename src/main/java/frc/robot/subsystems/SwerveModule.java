@@ -118,7 +118,7 @@ public class SwerveModule extends SubsystemBase {
   }
   
   public void resetRelEncoders() {
-    driveEncoder.setPosition(0);
+    // driveEncoder.setPosition(0);
   }
   
   // Drive Encoder getters
