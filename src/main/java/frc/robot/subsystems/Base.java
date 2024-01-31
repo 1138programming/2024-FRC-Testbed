@@ -25,13 +25,11 @@ public class Base extends SubsystemBase {
   private SwerveModule frontRightModule;
   private SwerveModule backLeftModule;
   private SwerveModule backRightModule;
-  private SwerveModule[] modules;
 
   private AHRS gyro;
 
   private SwerveDriveKinematics kinematics;
   private SwerveDriveOdometry odometry;
-  private Pose2d pose;
   
   private double driveSpeedFactor;
   private double rotSpeedFactor;
@@ -74,10 +72,6 @@ public class Base extends SubsystemBase {
       KBackRightDriveReversed,
       KBackRightAngleReversed
     );
-    // modules[0] = frontLeftModule;
-    // modules[1] = frontRightModule;
-    // modules[2] = backLeftModule;
-    // modules[3] = backRightModule;
 
     gyro = new AHRS(SPI.Port.kMXP);
     gyro.reset();
@@ -168,13 +162,12 @@ public class Base extends SubsystemBase {
   
   public void resetOdometry(Pose2d pose) {
     resetAllRelEncoders();
-    this.pose = pose;
     
     odometry.resetPosition(getHeading(), getPositions(), pose);
   }
 
   public Pose2d getPose() {
-    return pose;
+    return odometry.getPoseMeters();
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -219,9 +212,8 @@ public class Base extends SubsystemBase {
   
   public void resetOdometry() {
     resetAllRelEncoders();
-    pose = new Pose2d();
     
-    odometry.resetPosition(getHeading(), getPositions(), pose);
+    odometry.resetPosition(getHeading(), getPositions(), new Pose2d());
   }
 
   public Rotation2d getHeading() {
@@ -274,7 +266,6 @@ public class Base extends SubsystemBase {
     SmartDashboard.putNumber("BackRightCanCoderPos", backRightModule.getMagDegRaw());
     SmartDashboard.putNumber("FrontRightCanCoderPos", frontRightModule.getMagDegRaw());
     odometry.update(getHeading(), getPositions());
-    pose = odometry.getPoseMeters();
   }
 }
   
